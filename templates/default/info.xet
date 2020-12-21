@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2//EN" "http://www.egroupware.org/etemplate2.dtd">
+<!-- $Id$ -->
+<overlay>
+
+	<template id="untissync.info" template="" lang="" group="0" version="1.9.001">		
+		<grid width="100%" class="admin-config egwGridView_grid">
+			<columns>
+				<column width="20%"/>
+				<column width="80%"/>
+			</columns>
+			<rows>				
+				<row>
+					<description value="last_webuntis_import"/>
+					<description id="last_webuntis_import" width="30%"/>
+				</row>
+				<row>
+					<description value="last_update_timetable"/>
+					<description id="last_update_timetable" width="30%"/>
+				</row>
+				<row>
+					<description value="last_update_subs"/>
+					<description id="last_update_subs" width="30%"/>
+				</row>								
+				<row>
+					<description value="my_groups"/>
+					<select-account account_type="groups" id="my_groups" multiple="true" class="et2_fullWidth" readonly="true" tags="true"/>
+				</row>						
+			</rows>
+		</grid>		
+	</template>
+</overlay>

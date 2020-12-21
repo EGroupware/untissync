@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2//EN" "http://www.egroupware.org/etemplate2.dtd">
+<!-- $Id$ -->
+<overlay>	
+	<template id="untissync.mapping_te_edit" template="" lang="" group="0" version="16.1">
+		<description label="link_untis_teacher"/>
+
+		<grid>
+			<columns>
+				<column width="5%"/>
+				<column width="20%"/>
+				<column width="20%"/>
+				<column width="20%"/>
+				<column width="20%"/>
+			</columns>
+			<rows>
+				<row class="th">
+					<description label=""/>					
+					<description label="untis_fullname"/>
+					<description label="untis_name"/>
+					<description label="untis_prename"/>
+					<description label="egw_user"/>
+				</row>
+				<row>
+					<description id="nr" no_lang="1"/>					
+					<description id="longname" no_lang="1"/>
+					<description id="name" no_lang="1"/>
+					<description id="forename" no_lang="1"/>
+					<hbox>
+						<select-account account_type="accounts" id="egw_uid" multiple="false" readonly="false" class="et2_fullWidth" span="1" tags="true"/>
+					</hbox>										
+				</row>				
+			</rows>
+		</grid>		
+		<button statustext="Save" label="Save" id="button[save]" image="save" background_image="1"/>
+		<button statustext="Cancel" label="Cancel" id="button[cancel]" onclick="window.close();" image="cancel" background_image="1"/>
+	</template>
+</overlay>

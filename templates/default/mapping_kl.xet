@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2//EN" "http://www.egroupware.org/etemplate2.dtd">
+<!-- $Id$ -->
+<overlay>	
+	
+	<template id="untissync.mapping_kl.table" template="" lang="" group="0" version="16.1">
+		<grid id="nm_te">
+			<columns>
+				<column width="5%"/>
+				<column width="20%"/>
+				<column width="20%"/>
+				<column width="20%"/>
+				<column width="20%"/>
+			</columns>
+			<rows>
+				<row class="th">
+					<nextmatch-header id="id" label=""/>					
+					<nextmatch-sortheader id="longname" label="untis_fullname"/>
+					<nextmatch-sortheader id="name" label="untis_name"/>
+					<nextmatch-sortheader id="EGW User" label="egw_user"/>
+					<nextmatch-sortheader id="EGW Lehrergruppe" label="egw_teachergroup"/>
+				</row>
+				<row>
+					<description id="${row}[nr]" no_lang="1"/>					
+					<description id="${row}[longname]" no_lang="1"/>
+					<description id="${row}[name]" no_lang="1"/>
+					<hbox>
+						<select-account account_type="accounts" id="{$row}[egw_uid]" multiple="false" readonly="true" class="et2_fullWidth" span="1" tags="true"/>
+					</hbox>	
+					<hbox>
+						<select-account account_type="groups" id="{$row}[egw_group_id]" multiple="false" readonly="true" class="et2_fullWidth" span="1" tags="true"/>
+					</hbox>																
+				</row>				
+			</rows>
+		</grid>
+	</template>	
+	
+	<template id="untissync.mapping_kl.header_right" template="" lang="" group="0" version="0.0.001">
+		<button  statustext="import" label="import" id="button[update]" background_image="1"/>
+		<button  statustext="truncate" label="truncate" id="button[truncate]" background_image="1"/>
+	</template>
+	
+	<template id="untissync.mapping_kl" template="" lang="" group="0" version="16.1">
+		<nextmatch id="nm" no_lang="1" template="untissync.mapping_kl.table" header_right="untissync.mapping_kl.header_right"/>
+	</template>
+</overlay>

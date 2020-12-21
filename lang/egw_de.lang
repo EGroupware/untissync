@@ -1,0 +1,60 @@
+timetable	untissync	de	Stundenplan
+substitutions	untissync	de	Vertretungsplan
+linking	untissync	de	Kopplungen
+info	untissync	de	Info
+admin-tools	untissync	de	Admin-Tools
+teacher	untissync	de	Lehrer
+class	untissync	de	Klasse
+classes	untissync	de	Klassen
+room	untissync	de	Raum
+rooms	untissync	de	Räume
+serverurl	untissync	de	WebUntis Server-URL
+schoolname	untissync	de	WebUntis Schulname
+webuntis_username	untissync	de	WebUntis Benutzername
+webuntis_pswd	untissync	de	WebUntis Passwort
+cal_event_owner	untissync	de	Besitzer der Kalendertermine
+import_timetable_days	untissync	de	Anzahl der Tage ein, für die der Stundenplan im Voraus geladen werden soll.
+cal_integration	untissync	de	Stundenplan in den Kalender integrieren
+delete_expired_events	untissync	de	Abgelaufene Kalendereinträge wieder entfernen.
+prefix_class_user	untissync	de	Prefix der EGroupwarebenutzer, die Klassen repräsentieren (default: Klasse_)
+update_classgroup_members	untissync	de	EGroupwaregruppe der unterrichtenden Lehrer pro Klasse nach dem Import aktualisieren
+prefix_teachergroup	untissync	de	Prefix der EGroupwaregruppe, die Lehrergruppe repräsentieren (default: Lehrer_)
+date	untissync	de	Datum
+lesson	untissync	de	Stunde
+class_classes	untissync	de	Klasse(n)
+teacher_old	untissync	de	Lehrer
+teacher_new	untissync	de	Vertretung
+starttime	untissync	de	Beginn
+endtime	untissync	de	Ende
+text	untissync	de	Text
+room_old	untissync	de	Raum (vorher)
+subject	untissync	de	Fach
+status	untissync	de	Stand:
+last_webuntis_import	untissync	de	Letztes Update WebUntis:
+last_update_timetable	untissync	de	Letzer Stundenplanimport:
+last_update_subs	untissync	de	Letzer Vertretungsplanimport:
+my_groups	untissync	de	Meine Gruppen
+calender_category	untissync	de	Kategorie der Kalendereinträge
+untis_fullname	untissync	de	Untis vollst. Name
+untis_name	untissync	de	Untis Name
+type	untissync	de	Typ
+egw_user	untissync	de	EGroupware Benutzer
+egw_teachergroup	untissync	de	EGroupware Lehrergruppe
+egw_ressource	untissync	de	EGroupware Ressource
+untis_prename	untissync	de	Untis Vorname
+import	untissync	de	Importieren
+truncate	untissync	de	Alle löschen
+linking	untissync	de	Kopplungen
+linking_te	untissync	de	Kopplungen der Lehrer
+linking_ro	untissync	de	Kopplungen der Räume
+linking_cl	untissync	de	Kopplungen der Klassen
+link_untis_teacher	untissync	de	Lehrer aus UNTIS dem EGroupware-Benutzer zuordnen
+link_untis_room	untissync	de	Raum aus UNTIS dem EGroupware-Resource zuordnen
+link_untis_class	untissync	de	Klasse aus UNTIS dem EGroupware-Benutzer zuordnen
+create_async_timetable	untissync	de	Create Async Jobs Timetable
+create_async_substitutions	untissync	de	Create Async Jobs Substitutions
+create_async_timegrid	untissync	de	Create Async Jobs Timegrid
+delete_async	untissync	de	Delete Async Jobs
+import_substitutions	untissync	de	Import Vertretungsplan
+import_timetable	untissync	de	Import Stundenplan
+import_timegrid	untissync	de	Import Stundenraster
