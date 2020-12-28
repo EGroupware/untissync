@@ -77,8 +77,8 @@ class untissync_participant_so extends Api\Storage {
     
     /**
      * deletes all participants for given $parentid and specified parenttable 'tt' for timetable or 'su' for substitutions
-     * @param unknown $parentid
-     * @param unknown $key_parenttable
+     * @param int $parentid untis id
+     * @param string $key_parenttable ('tt' or 'sub')
      */
     public function deleteAllParticipants($parentid, $key_parenttable){
         $pas = $this->loadParticipants($parentid, $key_parenttable);

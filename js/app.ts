@@ -103,6 +103,39 @@ class UntissyncApp extends EgwApp
 		}).sendRequest(true);
 	}
 
+	/**
+	 * Cleanup orphaned calendar items
+	 */
+	cleanup_orphaned(){
+		egw.loading_prompt('untissync',true,egw.lang('please wait...'));
+		egw.json('untissync.untissync_ui.ajax_cleanupOrphaned',[], function(_data){
+			egw.loading_prompt('untissync', false);
+			egw(window).refresh(_data.msg, 'untissync', null, 'update');
+		}).sendRequest(true);
+	}
+
+	/**
+	 * Cleanup timetables
+	 */
+	delete_timetables(){
+		egw.loading_prompt('untissync',true,egw.lang('please wait...'));
+		egw.json('untissync.untissync_ui.ajax_deleteTimetables',[], function(_data){
+			egw.loading_prompt('untissync', false);
+			egw(window).refresh(_data.msg, 'untissync', null, 'update');
+		}).sendRequest(true);
+	}
+
+	/**
+	 * Cleanup substitutions
+	 */
+	delete_substitutions(){
+		egw.loading_prompt('untissync',true,egw.lang('please wait...'));
+		egw.json('untissync.untissync_ui.ajax_deleteSubstitutions',[], function(_data){
+			egw.loading_prompt('untissync', false);
+			egw(window).refresh(_data.msg, 'untissync', null, 'update');
+		}).sendRequest(true);
+	}
+
 }
 
 app.classes.untissync = UntissyncApp;

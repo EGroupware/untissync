@@ -342,6 +342,58 @@ class untissync_bo {
     }
 
     /**
+     * Cleanup orphaned calendar events
+     */
+    public function cleanupOrphaned(){
+        $eventIDs = $this->so_timetable->searchOrphanedCalEvents();
+
+        foreach ($eventIDs as $id){
+            $this->so_calendar->delete($id);
+        }
+        return sizeof($eventIDs);
+    }
+
+    /**
+     * Delete all timetables
+     */
+    public function deleteTimetables(&$msg = ''){
+        $value_col = array();
+        $value_col['id'] = 'tt_id';
+        $value_col['uid'] = 'tt_uid';
+        $value_col['egw_cal_id'] = 'tt_egw_cal_id';
+
+        $result = $this->so_timetable->query_list($value_col);
+
+        foreach ($result as $tt){
+            // delete participants
+            $this->so_participant->deleteAllParticipants($tt['id'], 'tt');
+            if($tt['egw_cal_id']) {
+                // delete egroupware cal event
+                $this->so_calendar->delete($tt['egw_cal_id']);
+            }
+            // delete timetable event
+            $this->so_timetable->delete($tt['id']);
+        }
+
+        return sizeof($result);
+    }
+
+    /**
+     * Delete all substitutinos
+     */
+    public function deleteSubstitutions(&$msg = ''){
+        $result = $this->so_substitution->search('');
+
+        foreach ($result as $sub){
+            // delete participants
+            $this->so_participant->deleteAllParticipants($sub['sub_id'], 'sub');
+            // delete substitution
+            $this->so_substitution->delete($sub['sub_id']);
+        }
+        return sizeof($result);
+    }
+
+    /**
      * Loads current school year
      * @param $start
      * @param $end

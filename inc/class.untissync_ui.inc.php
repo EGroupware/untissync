@@ -538,5 +538,45 @@ class untissync_ui
         );
         Api\Json\Response::get()->data($data);
     }
+
+    /**
+     * Delete orphaned calendar events
+     */
+    public function ajax_cleanupOrphaned(){
+        $msg = '';
+        $result = $this->bo->cleanupOrphaned($msg);
+        $data = array(
+            'msg' => $msg." $result calendar events deleted!",
+        );
+        Api\Json\Response::get()->data($data);
+    }
+
+    /**
+     * Delete all timetables items and calendar events
+     */
+    public function ajax_deleteTimetables(){
+        $msg = '';
+
+        $result = $this->bo->deleteTimetables($msg);
+
+        $data = array(
+            'msg' => $msg." $result calendar events deleted!",
+        );
+        Api\Json\Response::get()->data($data);
+    }
+
+    /**
+     * Delete all timetables items and calendar events
+     */
+    public function ajax_deleteSubstitutions(){
+        $msg = '';
+
+        $result = $this->bo->deleteSubstitutions($msg);
+
+        $data = array(
+            'msg' => $msg." $result substitutions deleted!",
+        );
+        Api\Json\Response::get()->data($data);
+    }
 }
 

@@ -143,7 +143,7 @@ class untissync_room_so extends Api\Storage {
             $filter[] = "(ro_name like ".$search." OR ro_longname like ".$search.")";
         }
         
-        $result = $this->query_list($this->value_col, $key_col, $filter);
+        $result = $this->query_list($this->value_col, '', $filter);
         $index = 0;
         foreach($result as $ro){
             $rows[$index] = $ro;

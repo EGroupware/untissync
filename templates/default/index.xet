@@ -45,12 +45,27 @@
 				</row>
 			</rows>
 		</grid>
-		<button disabled="!@admin" statustext="import_timetable" label="import_timetable" id="button[update_timetable]" image="" background_image="false" onclick="app.untissync.import_timetable"/>
-		<button disabled="!@admin" statustext="import_substitutions" label="import_substitutions" id="button[update_substitution]" image="" background_image="false" onclick="app.untissync.import_substitutions"/>
-		<button disabled="!@admin" statustext="import_timegrid" label="import_timegrid" id="button[update_timegrid]" image="" background_image="false"/>
-		<button disabled="!@admin" statustext="create_async_tmetable" label="create_async_timetable" id="button[create_async_timetable]" image="" background_image="false"/>
-		<button disabled="!@admin" statustext="create_async_substitutions" label="create_async_substitutions" id="button[create_async_substitution]" image="" background_image="false"/>
-		<button disabled="!@admin" statustext="delete_async" label="delete_async" id="button[delete_async]" image="" background_image="false"/>
-		<button disabled="!@admin" statustext="Update Group Members" label="Update Group Members" id="button[update_groupmembers]" image="" background_image="false"/>
+		<description value="import_update" id="import_update"/>
+		<hbox>
+			<button disabled="!@admin" statustext="import_timetable" label="import_timetable" id="button[update_timetable]" image="" background_image="false" onclick="app.untissync.import_timetable"/>
+			<button disabled="!@admin" statustext="import_substitutions" label="import_substitutions" id="button[update_substitution]" image="" background_image="false" onclick="app.untissync.import_substitutions"/>
+			<button disabled="!@admin" statustext="import_timegrid" label="import_timegrid" id="button[update_timegrid]" image="" background_image="false"/>
+			<button disabled="!@admin" statustext="update_groupmembers" label="update_groupmembers" id="button[update_groupmembers]" image="" background_image="false"/>
+		</hbox>
+
+		<description value="async_services" id="async_services"/>
+		<hbox>
+			<button disabled="!@admin" statustext="create_async_tmetable" label="create_async_timetable" id="button[create_async_timetable]" image="" background_image="false"/>
+			<button disabled="!@admin" statustext="create_async_substitutions" label="create_async_substitutions" id="button[create_async_substitution]" image="" background_image="false"/>
+			<button disabled="!@admin" statustext="delete_async" label="delete_async" id="button[delete_async]" image="" background_image="false"/>
+		</hbox>
+
+		<description value="cleanup" id="cleanup"/>
+		<hbox>
+			<button disabled="!@admin" statustext="cleanup_cal_orphaned" label="cleanup_cal_orphaned" id="button[cleanup_cal_orphaned]" image="" background_image="false" onclick="app.untissync.cleanup_orphaned"/>
+			<button disabled="!@admin" statustext="delete_timetables" label="delete_timetables" id="button[delete_timetables]" image="" background_image="false" onclick="app.untissync.delete_timetables"/>
+			<button disabled="!@admin" statustext="delete_substitutions" label="delete_substitutions" id="button[delete_substitutions]" image="" background_image="false" onclick="app.untissync.delete_substitutions"/>
+		</hbox>
+
 	</template>
 </overlay>

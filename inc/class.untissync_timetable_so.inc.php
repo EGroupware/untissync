@@ -276,5 +276,48 @@ class untissync_timetable_so extends Api\Storage {
 
         return $result;
     }
+
+    /**
+     * Search all orphaned calendar events
+     * SQL: SELECT COUNT(egw_cal.cal_id)
+     * FROM egw_cal
+     * LEFT JOIN egw_untissync_timetable ON egw_cal.cal_id = egw_untissync_timetable.tt_egw_cal_id
+     * WHERE egw_cal.cal_owner = 299 AND egw_cal.cal_category = 100 AND egw_untissync_timetable.tt_egw_cal_id IS null;
+     * @return array
+     */
+    public function searchOrphanedCalEvents(){
+        $result = array();
+
+        $config = untissync_config::read();
+
+        if(!$config['webuntis_cal_event_owner']){
+            return; // not able to delete orphaned events!
+        }
+        $event_owner = $config['webuntis_cal_event_owner'];
+        if($config['cal_category']){
+            $cal_category = $config['cal_category'];
+        }
+
+        $tables = 'egw_cal';
+        $cols = "egw_cal.cal_id";
+        $where = array(
+            "egw_cal.cal_owner = $event_owner",
+            "egw_untissync_timetable.tt_egw_cal_id IS null",
+        );
+        if(isset($cal_category)){
+            $where[] = "egw_cal.cal_category = $cal_category";
+        }
+
+        $join = "LEFT JOIN egw_untissync_timetable ON egw_cal.cal_id = egw_untissync_timetable.tt_egw_cal_id";
+        $append = '';
+
+        $adoRecordSet = $this->db->select($tables, $cols, $where, __LINE__, __FILE__, False, $append, False, 0, $join);
+
+        while($row = $adoRecordSet->fetchRow()){
+            $result[] = $row['cal_id'];
+        }
+
+        return $result;
+    }
     
 }

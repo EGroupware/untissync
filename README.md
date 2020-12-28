@@ -74,7 +74,7 @@ This step should be carried out whenever there have been changes in the teaching
 ### Run UntisSync in the background
 UntisSync offers two asynchronous jobs to import data regularly and unattended from WebUntis.
 To activate these services, select 'Admin-Tools' as admin from the sidebar.
-The services can be created via 'Create Async Jobs Timetable' and 'Create Async Jobs Substitutiopn'. Delete them by klicking 'Delete Asnyc Jobs'.
+The services can be created via 'Create Async Job Timetable' and 'Create Async Job Substitution'. Delete them by klicking 'Delete Asnyc Jobs'.
 
 After activating these jobs you can check them under _Admin / Asynchrounus timed services_. You should see two services with the names 'untissync_update_timetable' and 'untissync_update_substitutions'.
 If both services have been activated, the complete timetables are then re-imported once a night. Every 20 minutes UntisSync checks on the WebUntis server whether new data has been available since the last import of the substitution plan.
@@ -88,8 +88,8 @@ __Make sure you do not use unnecessary polling on the WebUntis production API!__
 After each import of the substitution plan, UntisSync uses the previous data to check which changes have been made.
 For every teacher who is affected by changes, the complete timetable is updated.
 
-### Troubleshooting
-TODO - coming soon!
+### Limitation
+Timetable entries not assigned to any teacher are currently not loaded from WebUntis.
 
 ### Footnotes
 <b id="f1">1</b> Untis and WebUntis are product names of the  Untis GMBH (https://www.untis.at).

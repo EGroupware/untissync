@@ -102,6 +102,36 @@ var UntissyncApp = /** @class */ (function (_super) {
             }
         }).sendRequest(true);
     };
+    /**
+     * Cleanup orphaned calendar items
+     */
+    UntissyncApp.prototype.cleanup_orphaned = function () {
+        egw.loading_prompt('untissync', true, egw.lang('please wait...'));
+        egw.json('untissync.untissync_ui.ajax_cleanupOrphaned', [], function (_data) {
+            egw.loading_prompt('untissync', false);
+            egw(window).refresh(_data.msg, 'untissync', null, 'update');
+        }).sendRequest(true);
+    };
+    /**
+     * Cleanup timetables
+     */
+    UntissyncApp.prototype.delete_timetables = function () {
+        egw.loading_prompt('untissync', true, egw.lang('please wait...'));
+        egw.json('untissync.untissync_ui.ajax_deleteTimetables', [], function (_data) {
+            egw.loading_prompt('untissync', false);
+            egw(window).refresh(_data.msg, 'untissync', null, 'update');
+        }).sendRequest(true);
+    };
+    /**
+     * Cleanup substitutions
+     */
+    UntissyncApp.prototype.delete_substitutions = function () {
+        egw.loading_prompt('untissync', true, egw.lang('please wait...'));
+        egw.json('untissync.untissync_ui.ajax_deleteSubstitutions', [], function (_data) {
+            egw.loading_prompt('untissync', false);
+            egw(window).refresh(_data.msg, 'untissync', null, 'update');
+        }).sendRequest(true);
+    };
     return UntissyncApp;
 }(egw_app_1.EgwApp));
 app.classes.untissync = UntissyncApp;

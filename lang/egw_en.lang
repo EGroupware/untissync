@@ -51,10 +51,17 @@ linking_cl	untissync	en	coupling of classes
 link_untis_teacher	untissync	en	Assign teachers from UNTIS to the EGroupware user
 link_untis_room	untissync	en	Assign room from UNTIS to the EGroupware ressource
 link_untis_class	untissync	en	Assign class from UNTIS to the EGroupware user
-create_async_timetable	untissync	en	Create Async Jobs Timetable
-create_async_substitutions	untissync	en	Create Async Jobs Substitutions
-create_async_timegrid	untissync	en	Create Async Jobs Timegrid
+create_async_timetable	untissync	en	Create Async Job Timetable
+create_async_substitutions	untissync	en	Create Async Job Substitutions
 delete_async	untissync	en	Delete Async Jobs
 import_substitutions	untissync	en	Import substitutions
 import_timetable	untissync	en	Import timetable
 import_timegrid	untissync	en	Import timegrid
+calendar_category	untissync	en	category of calendar items
+import_update	untissync	en	Import and update:
+async_services	untissync	en	Async services:
+cleanup	untissync	en	Clean up:
+cleanup_cal_orphaned	untissync	en	delete orphaned calendar items
+delete_timetables	untissync	en	delete timetables
+delete_substitutions	untissync	en	delete substitution plan
+update_groupmembers	untissync	en	update class groups
