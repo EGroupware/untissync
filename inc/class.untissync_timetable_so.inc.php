@@ -68,7 +68,7 @@ class untissync_timetable_so extends Api\Storage {
      * @param unknown $tt_su
      * @return boolean  false if nothing has to be uodated in egw calendar, timetable event else
      */
-    function save($tt_uid, $tt_teuid, $tt_date, $tt_starttime, $tt_endtime, $tt_lstype, $tt_code, $tt_lstext, $tt_statsflags, $tt_activitytype, $tt_kl, $tt_te, $tt_ro, $tt_su){
+    function write($tt_uid, $tt_teuid, $tt_date, $tt_starttime, $tt_endtime, $tt_lstype, $tt_code, $tt_lstext, $tt_statsflags, $tt_activitytype, $tt_kl, $tt_te, $tt_ro, $tt_su){
         $time = time();
         $key_col = "";
         
@@ -94,7 +94,8 @@ class untissync_timetable_so extends Api\Storage {
 
         if(is_array($result)){
             // timetable exists in DB
-            $updateFields = array('tt_modified' >= $time);            
+            $updateFields = array();
+            $updateFields['tt_modified'] = $time;
             if($this->equals($timetable, $result, $tt_kl, $tt_te, $tt_ro, $tt_su)){
                 // substitution not modified
                 $updateFields['tt_clean'] = 1; 
@@ -134,19 +135,19 @@ class untissync_timetable_so extends Api\Storage {
             // klassen
             foreach ($tt_kl as &$kl) {
                 // ($pa_parentid, $pa_parenttable, $pa_partid, $pa_parttype, $pa_partname, $pa_partorgid, $pa_partorgname){
-                $this->participant_so->save($parent_id, 'tt', $kl['id'], 'kl', $kl['name'], $kl['orgid'], $kl['orgname']);
+                $this->participant_so->write($parent_id, 'tt', $kl['id'], 'kl', $kl['name'], $kl['orgid'], $kl['orgname']);
             }
             // te
             foreach ($tt_te as &$te) {
-                $this->participant_so->save($parent_id, 'tt', $te['id'], 'te', $te['name'], $te['orgid'], $te['orgname']);
+                $this->participant_so->write($parent_id, 'tt', $te['id'], 'te', $te['name'], $te['orgid'], $te['orgname']);
             }
             // su
             foreach ($tt_su as &$su) {
-                $this->participant_so->save($parent_id, 'tt', $su['id'], 'su', $su['name'], $su['orgid'], $su['orgname']);
+                $this->participant_so->write($parent_id, 'tt', $su['id'], 'su', $su['name'], $su['orgid'], $su['orgname']);
             }
             // ro
             foreach ($tt_ro as &$ro) {
-                $this->participant_so->save($parent_id, 'tt', $ro['id'], 'ro', $ro['name'], $ro['orgid'], $ro['orgname']);
+                $this->participant_so->write($parent_id, 'tt', $ro['id'], 'ro', $ro['name'], $ro['orgid'], $ro['orgname']);
             }
 
             return $result;

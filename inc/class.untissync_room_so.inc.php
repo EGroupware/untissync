@@ -50,7 +50,7 @@ class untissync_room_so extends Api\Storage {
      * @param unknown $ro_egw_res_id EGroupware resource id
      * @return boolean
      */
-    function save($ro_uid, $ro_name, $ro_longname, $ro_egw_res_id, $active){
+    function write($ro_uid, $ro_name, $ro_longname, $ro_egw_res_id, $active){
         $time = time();
         $key_col = "";
         
@@ -133,7 +133,8 @@ class untissync_room_so extends Api\Storage {
      * @param unknown $rows
      * @return unknown
      */
-    function get_rows(&$query_in,&$rows){
+    function get_rows($query_in,&$rows,&$readonlys,$join='',$need_full_no_count=false,$only_keys=false,$extra_cols=array()){
+    //function get_rows(&$query_in,&$rows){
         $filter = array();
         $filter[] = "ro_egw_res_id >= -1";
         

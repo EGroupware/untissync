@@ -51,7 +51,7 @@ class untissync_teacher_so extends Api\Storage {
      * @param unknown $te_egw_uid EGroupware user id
      * @return boolean
      */
-    function save($te_uid, $te_name, $te_forename, $te_longname, $te_egw_uid, $active){
+    function write($te_uid, $te_name, $te_forename, $te_longname, $te_egw_uid, $active){
         $time = time();
         $key_col = "";
         
@@ -69,8 +69,7 @@ class untissync_teacher_so extends Api\Storage {
             'te_egw_uid' => $te_egw_uid,
             'te_modified' => $time,
         );
-        
-        
+
         // array_key_first php >= 7.3
         if(sizeof($result) == 0){    
             $teacher['te_created'] = $time;
@@ -129,11 +128,12 @@ class untissync_teacher_so extends Api\Storage {
     
     /**
      * nextmatch get rows
-     * @param unknown $query_in
-     * @param unknown $rows
-     * @return unknown
+     * @param array $query_in
+     * @param array $rows
+     * @return int total numbers of rows
      */
-    function get_rows(&$query_in,&$rows){
+    //function get_rows(&$query_in,&$rows){
+    function get_rows($query,&$rows,&$readonlys,$join='',$need_full_no_count=false,$only_keys=false,$extra_cols=array()){
         $filter = array();
         $filter[] = 'te_egw_uid >= -1';
 

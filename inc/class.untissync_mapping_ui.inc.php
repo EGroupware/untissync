@@ -140,31 +140,27 @@ class untissync_mapping_ui
 		
 		if (is_array($content))
 		{
-		    list($button) = @each($content['nm']['button']);
-		    unset($content['button']);
-		    if ($button)
-		    {		        
-		        if($button == 'update')
-		        {
-		            $result = $this->bo->updateTeachers($msg);
-		            if($result){
-		                $msg = $msg.PHP_EOL."Update succeeded!";
-		            }
-		            else{
-		                $msg = $msg.PHP_EOL."Update failed!";
-		            }
-		        }		        
-		        elseif($button == 'truncate')
-		        {
-		            $result = $this->bo->truncateTeachers();
-		            if($result){
-		                $msg = "Deleted successfully!";
-		            }
-		            else{
-		                $msg = "Could not be deleted successfully!";
-		            }
-		        }
-		    }
+            if(is_array($content['nm']['button'])) {
+                $button = key($content['nm']['button']);
+                unset($content['nm']['button']);
+                if ($button) {
+                    if ($button == 'update') {
+                        $result = $this->bo->updateTeachers($msg);
+                        if ($result) {
+                            $msg = $msg . PHP_EOL . "Update succeeded!";
+                        } else {
+                            $msg = $msg . PHP_EOL . "Update failed!";
+                        }
+                    } elseif ($button == 'truncate') {
+                        $result = $this->bo->truncateTeachers();
+                        if ($result) {
+                            $msg = "Deleted successfully!";
+                        } else {
+                            $msg = "Could not be deleted successfully!";
+                        }
+                    }
+                }
+            }
 		    
 		    // action
 		    if ($content['nm']['action'])
@@ -276,25 +272,23 @@ class untissync_mapping_ui
 	    
 	    if (is_array($content))
 	    {
-	        list($button) = @each($content['button']);
-	        unset($content['button']);
-	        if ($button)
-	        {
-	            if($button == 'save')
-	            {
-	                $result = $this->bo->updateTeacherMapping($content['egw_uid'], Api\Cache::getSession('untissync', 'mapping_te_id'));
-	                if($result){
-	                    $msg = "Update succeeded!";
-	                    // Api\Cache::unsetSession('untissync', 'mapping_te_search');
-	                    Framework::refresh_opener($msg, 'untissync');	                    
-	                }
-	                else
-	                {
-	                    $msg = lang('Error updating the entry!!!');	                   
-	                }
-	                Framework::window_close();
-	            }	               	            
-	        } 
+            if(is_array($content['button'])) {
+                $button = key($content['button']);
+                unset($content['button']);
+                if ($button) {
+                    if ($button == 'save') {
+                        $result = $this->bo->updateTeacherMapping($content['egw_uid'], Api\Cache::getSession('untissync', 'mapping_te_id'));
+                        if ($result) {
+                            $msg = "Update succeeded!";
+                            // Api\Cache::unsetSession('untissync', 'mapping_te_search');
+                            Framework::refresh_opener($msg, 'untissync');
+                        } else {
+                            $msg = lang('Error updating the entry!!!');
+                        }
+                        Framework::window_close();
+                    }
+                }
+            }
 	    }	    
 	    
 	    if(isset($nm_id)){
@@ -415,31 +409,27 @@ class untissync_mapping_ui
 	    
 	    if (is_array($content))
 	    {
-	        list($button) = @each($content['nm']['button']);
-	        unset($content['button']);
-	        if ($button)
-	        {
-	            if($button == 'update')
-	            {
-	                $result = $this->bo->updateRooms();
-	                if($result){
-	                    $msg = "Update succeeded!";
-	                }
-	                else{
-	                    $msg = "Update failed!";
-	                }
-	            }
-	            elseif($button == 'truncate')
-	            {
-	                $result = $this->bo->truncateRooms();
-	                if($result){
-	                    $msg = "Deleted successfully!";
-	                }
-	                else{
-	                    $msg = "Could not be deleted successfully!";
-	                }
-	            }
-	        }
+            if(is_array($content['nm']['button'])) {
+                $button = key($content['nm']['button']);
+                unset($content['nm']['button']);
+                if ($button) {
+                    if ($button == 'update') {
+                        $result = $this->bo->updateRooms();
+                        if ($result) {
+                            $msg = "Update succeeded!";
+                        } else {
+                            $msg = "Update failed!";
+                        }
+                    } elseif ($button == 'truncate') {
+                        $result = $this->bo->truncateRooms();
+                        if ($result) {
+                            $msg = "Deleted successfully!";
+                        } else {
+                            $msg = "Could not be deleted successfully!";
+                        }
+                    }
+                }
+            }
 	        
 	        // action
 	        if ($content['nm']['action'])
@@ -550,25 +540,23 @@ class untissync_mapping_ui
 	    
 	    if (is_array($content))
 	    {
-	        list($button) = @each($content['button']);
-	        unset($content['button']);
-	        if ($button)
-	        {
-	            if($button == 'save')
-	            {
-	                $result = $this->bo->updateRoomMapping($content['room'], Api\Cache::getSession('untissync', 'mapping_ro_id'));
-	                if($result){
-	                    $msg = "Update succeeded!";
-	                    //Api\Cache::unsetSession('untissync', 'mapping_ro_search');
-	                    Framework::refresh_opener($msg, 'untissync');	                    
-	                }
-	                else
-	                {
-	                    $msg = lang('Error updating the entry!!!');
-	                }
-	                Framework::window_close();
-	            }
-	        }
+            if(is_array($content['button'])) {
+                $button = key($content['button']);
+                unset($content['button']);
+                if ($button) {
+                    if ($button == 'save') {
+                        $result = $this->bo->updateRoomMapping($content['room'], Api\Cache::getSession('untissync', 'mapping_ro_id'));
+                        if ($result) {
+                            $msg = "Update succeeded!";
+                            //Api\Cache::unsetSession('untissync', 'mapping_ro_search');
+                            Framework::refresh_opener($msg, 'untissync');
+                        } else {
+                            $msg = lang('Error updating the entry!!!');
+                        }
+                        Framework::window_close();
+                    }
+                }
+            }
 	    }
 	    
 	    if(isset($nm_id)){
@@ -701,31 +689,27 @@ class untissync_mapping_ui
 	    
 	    if (is_array($content))
 	    {
-	        list($button) = @each($content['nm']['button']);
-	        unset($content['button']);
-	        if ($button)
-	        {
-	            if($button == 'update')
-	            {
-	                $result = $this->bo->updateClasses();
-	                if($result){
-	                    $msg = "Update succeeded!";
-	                }
-	                else{
-	                    $msg = "Update failed!";
-	                }
-	            }
-	            elseif($button == 'truncate')
-	            {
-	                $result = $this->bo->truncateClasses();
-	                if($result){
-	                    $msg = "Deleted successfully!";
-	                }
-	                else{
-	                    $msg = "Could not be deleted successfully!";
-	                }
-	            }
-	        }
+            if(is_array($content['nm']['button'])) {
+                $button = key($content['nm']['button']);
+                unset($content['nm']['button']);
+                if ($button) {
+                    if ($button == 'update') {
+                        $result = $this->bo->updateClasses();
+                        if ($result) {
+                            $msg = "Update succeeded!";
+                        } else {
+                            $msg = "Update failed!";
+                        }
+                    } elseif ($button == 'truncate') {
+                        $result = $this->bo->truncateClasses();
+                        if ($result) {
+                            $msg = "Deleted successfully!";
+                        } else {
+                            $msg = "Could not be deleted successfully!";
+                        }
+                    }
+                }
+            }
 	        
 	        // action
 	        if ($content['nm']['action'])
@@ -837,26 +821,24 @@ class untissync_mapping_ui
 	    
 	    if (is_array($content))
 	    {
-	        list($button) = @each($content['button']);
-	        unset($content['button']);
-	        if ($button)
-	        {
-	            $kl_id = Api\Cache::getSession('untissync', 'mapping_kl_id');
-	            if($button == 'save' && $kl_id > 0)
-	            {
-	                $result = $this->bo->updateClassMapping($content['egw_uid'], $kl_id,$content['egw_group_id']);
-	                if($result){
-	                    $msg = "Update succeeded!";
-	                    //Api\Cache::unsetSession('untissync', 'mapping_kl_search');
-	                    Framework::refresh_opener($msg, 'untissync');	                    
-	                }
-	                else
-	                {
-	                    $msg = lang('Error updating the entry!!!');
-	                }
-	                Framework::window_close();
-	            }
-	        }
+            if(is_array($content['button'])) {
+                $button = key($content['button']);
+                unset($content['button']);
+                if ($button) {
+                    $kl_id = Api\Cache::getSession('untissync', 'mapping_kl_id');
+                    if ($button == 'save' && $kl_id > 0) {
+                        $result = $this->bo->updateClassMapping($content['egw_uid'], $kl_id, $content['egw_group_id']);
+                        if ($result) {
+                            $msg = "Update succeeded!";
+                            //Api\Cache::unsetSession('untissync', 'mapping_kl_search');
+                            Framework::refresh_opener($msg, 'untissync');
+                        } else {
+                            $msg = lang('Error updating the entry!!!');
+                        }
+                        Framework::window_close();
+                    }
+                }
+            }
 	    }
 	    
 	    if(isset($nm_id)){

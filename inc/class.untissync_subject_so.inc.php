@@ -47,7 +47,7 @@ class untissync_subject_so extends Api\Storage {
      * @param unknown $su_longname
      * @return boolean
      */
-    function save($su_uid, $su_name, $su_longname){
+    function write($su_uid, $su_name, $su_longname){
         $time = time();
         $key_col = "";
         

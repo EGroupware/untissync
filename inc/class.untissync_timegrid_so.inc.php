@@ -38,14 +38,22 @@ class untissync_timegrid_so extends Api\Storage {
         
         $this->customfields = Storage\Customfields::get($app, false, null, $db);
     }
-    
-    function save($tg_day, $tg_name, $tg_start, $tg_end){
+
+    /**
+     * Write to DB.
+     * @param $tg_day
+     * @param $tg_name
+     * @param $tg_start
+     * @param $tg_end
+     * @return false|void
+     */
+    function write($tg_day, $tg_name, $tg_start, $tg_end){
         
         $filter = array();
         $filter['tg_day'] = $tg_day;
         $filter['tg_name'] = $tg_name;
         
-        $result = $this->query_list($this->value_col, $key_col, $filter);
+        $result = $this->query_list($this->value_col, '', $filter);
         
         $subject = array(
             'tg_day' => $tg_day,

@@ -505,8 +505,8 @@ class untissync_bo {
 	        'jsonrpc' => '2.0',
 	        'params' => array(
 	            'departmentId' => 0,
-	            'startDate' => $startDate,//'20200116',
-	           'endDate' => $endDate, //'20200131',
+	            'startDate' => $startDate,
+	            'endDate' => $endDate,
 	        ),
 	    );
 	    
@@ -539,7 +539,7 @@ class untissync_bo {
 		
 	    foreach ($result['result'] as &$val) {
     	    $val['txt'] = $val['txt'] ?? ''; 
-    	    $this->so_substitution->save($val['type'], $val['lsid'],  $val['date'], $val['startTime'], $val['endTime'], $val['kl'], $val['te'], $val['ro'], $val['su'], $val['txt'], $untisTeacherSet);
+    	    $this->so_substitution->write($val['type'], $val['lsid'],  $val['date'], $val['startTime'], $val['endTime'], $val['kl'], $val['te'], $val['ro'], $val['su'], $val['txt'], $untisTeacherSet);
 	    }
 
 	    curl_close($ch);
@@ -640,7 +640,7 @@ class untissync_bo {
 	    
 	    if(is_array($result)){	        	   
     	    foreach ($result['result'] as &$val) {
-    	        $tt = $this->so_timetable->save($val['id'], $object_id, $val['date'], $val['startTime'], $val['endTime'], $val['lstype'], $val['code'], $val['lstext'], $val['statsflags'], $val['activityType'], $val['kl'], $val['te'], $val['ro'], $val['su']);
+    	        $tt = $this->so_timetable->write($val['id'], $object_id, $val['date'], $val['startTime'], $val['endTime'], $val['lstype'], $val['code'], $val['lstext'], $val['statsflags'], $val['activityType'], $val['kl'], $val['te'], $val['ro'], $val['su']);
     	        if(is_array($tt)){
     	            $ttevents[] = $tt;
     	        }
@@ -768,7 +768,7 @@ class untissync_bo {
 	                $egw_uid = $teacher['te_egw_uid'];
 	            }
 	        }
-	        $this->so_teacher->save($val['id'], $val['name'], $val['foreName'],  $val['longName'],  $egw_uid, $active);	        	       
+	        $this->so_teacher->write($val['id'], $val['name'], $val['foreName'],  $val['longName'],  $egw_uid, $active);
 	    }
 	    curl_close($ch);
 	    return true;
@@ -925,7 +925,7 @@ class untissync_bo {
     	        }
     	    }
 
-    	    $this->so_room->save($val['id'], $val['name'],$val['longName'],  $egw_res_id, $active);
+    	    $this->so_room->write($val['id'], $val['name'],$val['longName'],  $egw_res_id, $active);
 	    }
 	    
 	    curl_close($ch);
@@ -1005,7 +1005,7 @@ class untissync_bo {
 
 	        $active = $egw_uid > 0 && $egw_gid < 0;	       
 
-	        $this->so_class->save($val['id'], $val['name'], $val['longName'], $egw_uid, $egw_gid, $active);
+	        $this->so_class->write($val['id'], $val['name'], $val['longName'], $egw_uid, $egw_gid, $active);
 	    }
 	    
 	    curl_close($ch);
@@ -1052,7 +1052,7 @@ class untissync_bo {
 	    $result = $this->getJSONContent($response);
 	    
 	    foreach ($result['result'] as &$val) {
-	        $this->so_subject->save($val['id'], $val['name'], $val['longName']);
+	        $this->so_subject->write($val['id'], $val['name'], $val['longName']);
 	    }
 	    
 	    curl_close($ch);
@@ -1121,7 +1121,7 @@ class untissync_bo {
 	        $day = $val['day'];
 	        
 	        foreach($val['timeUnits'] as &$unit){
-	            $this->so_timegrid->save($day, $unit['name'], $unit['startTime'], $unit['endTime']);
+	            $this->so_timegrid->write($day, $unit['name'], $unit['startTime'], $unit['endTime']);
 	            //$this->timegrid[$day.'-'.$unit['startTime'].'-'.$unit['endTime']] = $unit['name'];
 	        }	        
 	    }
@@ -1440,7 +1440,8 @@ class untissync_bo {
      */
 	public function getTeacherMapping(&$query_in,&$rows)
 	{
-	    $result = $this->so_teacher->get_rows($query_in,$rows);	    
+        $readonlys = array();
+	    $result = $this->so_teacher->get_rows($query_in,$rows, $readonlys);
 	    return $result;	   
 	}
 
@@ -1451,7 +1452,8 @@ class untissync_bo {
      */
 	public function getRoomMapping(&$query_in,&$rows)
 	{
-	    $result = $this->so_room->get_rows($query_in,$rows);
+        $readonlys = array();
+	    $result = $this->so_room->get_rows($query_in,$rows, $readonlys);
 	    // add egw room name
 	    foreach($rows as &$room){
 	        if($room['egw_res_id'] > 0){
@@ -1471,7 +1473,8 @@ class untissync_bo {
      */
 	public function getClassMapping(&$query_in,&$rows)
 	{
-	    $result = $this->so_class->get_rows($query_in,$rows);
+        $readonlys = array();
+	    $result = $this->so_class->get_rows($query_in,$rows, $readonlys);
 	    return $result;
 	}
 	

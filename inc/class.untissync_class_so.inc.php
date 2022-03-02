@@ -53,13 +53,13 @@ class untissync_class_so extends Api\Storage {
         if(!isset($this->prefix_class_username)){
             $this->prefix_class_username = "Klasse_";
         }        
-        $this->classAccounts = $this->getPossibleEGWAccounts();
+        $this->classAccounts = $this->getPotentialEGWAccounts();
         
         $this->prefix_class_teacher = $config['webuntis_mapping_prefix_teacher'];        
         if(!isset($this->prefix_class_teacher)){
             $this->prefix_class_teacher = "Lehrer_";
         }
-        $this->classGroups = $this->getPossibleTeacherGroups();
+        $this->classGroups = $this->getPotentialTeacherGroups();
     }
 
     /**
@@ -72,7 +72,7 @@ class untissync_class_so extends Api\Storage {
      * @param $active
      * @return bool|int
      */
-    public function save($kl_uid, $kl_name, $kl_longname, $kl_egw_uid, $kl_egw_group_id, $active){
+    public function write($kl_uid, $kl_name, $kl_longname, $kl_egw_uid, $kl_egw_group_id, $active){
         $time = time();
         $key_col = "";
         
@@ -155,7 +155,8 @@ class untissync_class_so extends Api\Storage {
      * @param unknown $rows
      * @return unknown
      */
-    function get_rows(&$query_in,&$rows){
+    function get_rows($query_in,&$rows,&$readonlys,$join='',$need_full_no_count=false,$only_keys=false,$extra_cols=array()){
+    //function get_rows(&$query_in,&$rows){
         $filter = array();
         //$filter[] = "kl_egw_uid >= -1";
         $filter[] = "1=1";
@@ -169,7 +170,7 @@ class untissync_class_so extends Api\Storage {
             $filter[] = "(kl_name like ".$search." OR kl_longname like ".$search.")";
         }
         
-        $result = $this->query_list($this->value_col, $key_col, $filter);
+        $result = $this->query_list($this->value_col, '', $filter);
         $index = 0;
         foreach($result as $te){
             $rows[$index] = $te;
@@ -206,7 +207,7 @@ class untissync_class_so extends Api\Storage {
     /**
      * search all potential accounts, representing a system class user
      */
-    private function getPossibleEGWAccounts(){
+    private function getPotentialEGWAccounts(){
         $accounts =  API\Accounts::getInstance();        
         
         $param = array();
@@ -221,7 +222,7 @@ class untissync_class_so extends Api\Storage {
     /**
      * search all potential accounts, representing a system class user
      */
-    private function getPossibleTeacherGroups(){
+    private function getPotentialTeacherGroups(){
         $accounts =  API\Accounts::getInstance();
 
         $param = array();

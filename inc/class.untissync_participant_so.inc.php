@@ -55,7 +55,7 @@ class untissync_participant_so extends Api\Storage {
      * @param unknown $pa_partorgname
      * @return boolean
      */
-    public function save($pa_parentid, $pa_parenttable, $pa_partid, $pa_parttype, $pa_partname, $pa_partorgid, $pa_partorgname){
+    public function write($pa_parentid, $pa_parenttable, $pa_partid, $pa_parttype, $pa_partname, $pa_partorgid, $pa_partorgname){
         $time = time();
         
         $participant = array(

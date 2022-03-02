@@ -21,7 +21,6 @@ use EGroupware\Api\Etemplate;
  */
 class untissync_ui
 {
-
 	/**
 	 * Name of the async job for cleaning up shares
 	 */
@@ -69,28 +68,10 @@ class untissync_ui
 		$preserv = array();
 		if (is_array($content))
 		{
-			list($button) = @each($content['button']);
+			$button = key($content['button']);
 			unset($content['button']);
 			if ($button)
 			{
-				/*if($button == 'update_timetable')
-				{
-					$content['exec_button'] = "update_timetable";
-					$result = $this->bo->importTimetable($msg);
-				}*/
-				/*elseif($button == 'update_substitution')
-				{
-				    $content['exec_button'] = "update_substitutions";
-				    $result = $this->bo->importSubstitutions();
-				    if($result > 0){
-				        $msg = $msg.$result." Einträge wurden importiert!";
-                    }
-				    else{
-                        $msg = $msg.$result." Einträge wurden importiert!";
-                    }
-				    $this->bo->requestLastImportTime($msg);
-				    $content['post_result'] = $result;
-				}*/
 				if($button == 'update_timegrid')
 				{
 				    $content['exec_button'] = "update_substitutions";

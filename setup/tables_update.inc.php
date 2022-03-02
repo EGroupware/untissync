@@ -82,3 +82,11 @@ function untissync_upgrade19_1_007()
     return $GLOBALS['setup_info']['untissync']['currentver'] = '20.1.001';
 }
 
+function untissync_upgrade20_1_001()
+{
+    $GLOBALS['egw_setup']->oProc->CreateIndex('egw_untissync_participant', array('pa_parentid','pa_parenttable','pa_partid','pa_parttype'),false);
+    $GLOBALS['egw_setup']->oProc->CreateIndex('egw_untissync_class', array('kl_uid'),false);
+    $GLOBALS['egw_setup']->oProc->CreateIndex('egw_untissync_timetable', array('tt_egw_cal_id'),false);
+    return $GLOBALS['setup_info']['untissync']['currentver'] = '21.1';
+}
+

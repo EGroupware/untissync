@@ -22,10 +22,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-require("jquery");
-require("jqueryui");
-require("../jsapi/egw_global");
-require("../etemplate/et2_types");
 var egw_app_1 = require("../../api/js/jsapi/egw_app");
 /**
  * UI for untissync

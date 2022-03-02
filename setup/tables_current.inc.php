@@ -45,7 +45,7 @@ $phpgw_baseline = array(
 		),
 		'pk' => array('kl_id'),
 		'fk' => array(),
-		'ix' => array(),
+		'ix' => array('kl_uid'),
 		'uc' => array()
 	),
 	'egw_untissync_subject' => array(
@@ -121,7 +121,7 @@ $phpgw_baseline = array(
         ),
         'pk' => array('pa_id'),
         'fk' => array(),
-        'ix' => array(),
+        'ix' => array('pa_parentid','pa_parenttable','pa_partid','pa_parttype'),
         'uc' => array()
     ),
     'egw_untissync_timetable' => array(
@@ -144,7 +144,7 @@ $phpgw_baseline = array(
         ),
         'pk' => array('tt_id'),
         'fk' => array(),
-        'ix' => array(),
+        'ix' => array('tt_egw_cal_id'),
         'uc' => array()
     ),
     'egw_untissync_timegrid' => array(
