@@ -19,7 +19,7 @@ include('../header.inc.php');
 
 if ($ts_version != $GLOBALS['egw_info']['apps']['untissync']['version'])
 {
-    Framework::render('<p style="text-align: center; color:#ff0000; font-weight: bold;">' .
+    $GLOBALS['egw']->framework->render('<p style="text-align: center; color:#ff0000; font-weight: bold;">' .
         lang('Your database is NOT up to date (%1 vs. %2), please run %3setup%4 to update your database.',
             $ts_version,$GLOBALS['egw_info']['apps']['schulmanager']['version'],
             '<a href="../setup/">','</a>')."</p>\n", null, true);

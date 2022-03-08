@@ -31,8 +31,9 @@ $setup_info[UNTISSYNC_APP]['tables'][]    = 'egw_untissync_timegrid';
 $setup_info[UNTISSYNC_APP]['enable']    = 1;
 
 /* The hooks this app includes, needed for hooks registration */
-$setup_info[UNTISSYNC_APP]['hooks']['sidebox_menu'] = 'untissync_hooks::all_hooks';
 $setup_info[UNTISSYNC_APP]['hooks']['settings'] = 'untissync_hooks::settings';
+$setup_info[UNTISSYNC_APP]['hooks']['admin'] = 'untissync_hooks::all_hooks';
+$setup_info[UNTISSYNC_APP]['hooks']['sidebox_menu'] = 'untissync_hooks::all_hooks';
 $setup_info[UNTISSYNC_APP]['hooks']['search_link']	= 'untissync_hooks::search_link';
 
 /* Dependencies for this app to work */

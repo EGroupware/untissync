@@ -78,26 +78,12 @@ class untissync_hooks
 			        'ajax' => 'true',
 			    ))
 			);
-
-            if ($GLOBALS['egw_info']['user']['apps']['admin'])
-            {
-                $file[] = array(
-                    'text' => 'admin-tools',
-                    'app'  => 'untissync',
-                    'link' =>  Egw::link('/index.php',array(
-                        'menuaction' => 'untissync.untissync_ui.index',
-                        'ajax' => 'true',
-                    ))
-                );
-            }
-
-
 			display_sidebox($appname,$title,$file);		
 		}
 		
 		if ($GLOBALS['egw_info']['user']['apps']['admin'])
 		{
-		    $title = 'linking';
+		    $title = 'Mapping';
 		    $file = Array();		    
 		    
 		    $file[] = array(
@@ -132,9 +118,8 @@ class untissync_hooks
 		if ($GLOBALS['egw_info']['user']['apps']['admin'])
 		{
 			$file = Array(
-				'Site Configuration' => Egw::link('/index.php',
-				    'menuaction=admin.admin_config.index&appname=' . $appname,
-				    '&ajax=true'),
+                'Admin Tools' => Egw::link('/index.php', 'menuaction=untissync.untissync_ui.index', '&ajax=true'),
+				'Site Configuration' => Egw::link('/index.php', 'menuaction=admin.admin_config.index&appname=' . $appname,'&ajax=true'),
 			);
 			if ($location == 'admin')
 			{
