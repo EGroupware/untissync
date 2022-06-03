@@ -10,6 +10,10 @@
 			</columns>
 			<rows>
 				<row>
+					<description value="Version"/>
+					<description value="2022-06-03-0846"/>
+				</row>
+				<row>
 					<description value="serverurl"/>
 					<textbox id="newsettings[webuntis_server]" maxlength="265" width="30%"/>
 				</row>

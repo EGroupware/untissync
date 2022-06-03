@@ -60,10 +60,10 @@ class untissync_bo {
 	
 	var $lstype = array(
 	    'ls' => 'Unterricht',
-	    'oh' => 'Büro',
-	    'sb' => 'Präsenz',
+	    'oh' => 'BÃ¼ro',
+	    'sb' => 'PrÃ¤senz',
 	    'bs' => 'Aufsicht',
-	    'ex' => 'Prüfung',
+	    'ex' => 'PrÃ¼fung',
 	);
 	
 	// timegrid array day-start-end => name, needed for searching the name of a lesson by start- and endtime
@@ -245,7 +245,7 @@ class untissync_bo {
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    $response = curl_exec($ch);
 	    
-	    // HTTP-Status-Code prüfen
+	    // check HTTP status code
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK
@@ -306,7 +306,7 @@ class untissync_bo {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$json = curl_exec($ch);
 		
-		// HTTP-Status-Code prüfen
+		// check HTTP status code
 		if (!curl_errno($ch)) {
 		    switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 		        case 200:  # OK
@@ -422,7 +422,7 @@ class untissync_bo {
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    $response = curl_exec($ch);
 	    
-	    // HTTP-Status-Code prüfen
+	    // check HTTP status code
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK	                
@@ -457,11 +457,10 @@ class untissync_bo {
 	        // $startDate before first day in school year
 	        $startDate = $startD;
 	    }
-	    if($endDate->diff($endD) < 0){
-	        // $startDate before first day in school year
+	    if($endDate->diff($endD) > 0){
+	        // $endDate after last day in school year
 	        $endDate = $endD;
 	    }
-	    
 	}
 
 	/**
@@ -524,7 +523,7 @@ class untissync_bo {
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    $response = curl_exec($ch);
 	    
-	    // HTTP-Status-Code prüfen
+	    // check HTTP status code
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK
@@ -625,15 +624,15 @@ class untissync_bo {
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    $response = curl_exec($ch);
 	    
-	    // HTTP-Status-Code prüfen
+	    // check HTTP status code
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK
 	                
 	                break;
 	            default:
-	                echo 'Unerwarter HTTP-Code: ', $http_code, "\n";
-	                return 'Unerwarter HTTP-Code: '. $http_code;
+	                echo 'unexpected HTTP-Code: ', $http_code, "\n";
+	                return 'unexpected HTTP-Code: '. $http_code;
 	        }
 	    }
 	    $result = $this->getJSONContent($response);
@@ -718,7 +717,7 @@ class untissync_bo {
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    $response = curl_exec($ch);
 	    
-	    // HTTP-Status-Code prüfen
+	    // check HTTP status code
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK
@@ -882,7 +881,7 @@ class untissync_bo {
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    $response = curl_exec($ch);
 	    
-	    // HTTP-Status-Code prüfen
+	    // check HTTP status code
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK
@@ -986,7 +985,7 @@ class untissync_bo {
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    $response = curl_exec($ch);
 	    
-	    // HTTP-Status-Code prüfen
+	    // check HTTP status code
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK
@@ -1038,7 +1037,7 @@ class untissync_bo {
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    $response = curl_exec($ch);
 	    
-	    // HTTP-Status-Code prüfen
+	    // check HTTP status code
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK
@@ -1104,7 +1103,7 @@ class untissync_bo {
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    $response = curl_exec($ch);
 	    
-	    // HTTP-Status-Code prüfen
+	    // check HTTP status code
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK
@@ -1234,10 +1233,10 @@ class untissync_bo {
             return; // no teacher found! 
         }        
 	        
-	    // Teilnehmer und Raum hinzufügen
+	    // Teilnehmer und Raum hinzufï¿½gen
 		$this->createParticipantsInfo($event, $te, $kl, $ro);
 		$msg = "";
-		$calid = $this->bo_calendar_update->update($event, true, true, true, true, $msg, true); // true for ignore_conflicts, update modifier, ignore acl	    
+		$calid = $this->bo_calendar_update->update($event, true, true, true, true, $msg, "NOPUSH"); // true for ignore_conflicts, update modifier, ignore acl
 
 	    $this->so_timetable->updateEgwCalendarEventID($ttevent, $calid); // update id an timestamp
 	    
@@ -1271,21 +1270,21 @@ class untissync_bo {
 	            $title = $title.$this->arrayToCSV($kl, 'kl_name');
 	            break;
 	        case "oh":	            
-	            // Büro
-	            //$title = 'Büro';
+	            // Bï¿½ro
+	            //$title = 'Bï¿½ro';
 	            $title = $title.$this->arrayToCSV($su, 'su_name');
 	            break;
 	        case "sb":
-	            // Präsenz
-	            $title = $title.utf8_encode("Präsenz");
+	            // Prï¿½senz
+	            $title = $title.utf8_encode("Prï¿½senz");
 	            break;
 	        case "bs":
 	            // Aufsicht Pause
 	            $title = $title.$this->arrayToCSV($ro, 'ro_name').'(Aufs.)';
 	            break;
 	        case "ex":
-	            // Prüfung
-	            $title = $title.'Prüfung';
+	            // Prï¿½fung
+	            $title = $title.'Prï¿½fung';
 	            break;
 	        default:
 	            // Unterricht
