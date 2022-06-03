@@ -1270,21 +1270,20 @@ class untissync_bo {
 	            $title = $title.$this->arrayToCSV($kl, 'kl_name');
 	            break;
 	        case "oh":	            
-	            // B�ro
-	            //$title = 'B�ro';
+	            // Büro
 	            $title = $title.$this->arrayToCSV($su, 'su_name');
 	            break;
 	        case "sb":
-	            // Pr�senz
-	            $title = $title.utf8_encode("Pr�senz");
+	            // Präsenz
+	            $title = $title.utf8_encode("Präsenz");
 	            break;
 	        case "bs":
 	            // Aufsicht Pause
 	            $title = $title.$this->arrayToCSV($ro, 'ro_name').'(Aufs.)';
 	            break;
 	        case "ex":
-	            // Pr�fung
-	            $title = $title.'Pr�fung';
+	            // Prüfung
+	            $title = $title.'Prüfung';
 	            break;
 	        default:
 	            // Unterricht
