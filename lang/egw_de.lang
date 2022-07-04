@@ -29,7 +29,6 @@ endtime	untissync	de	Ende
 text	untissync	de	Text
 room_old	untissync	de	Raum (vorher)
 subject	untissync	de	Fach
-status	untissync	de	Stand:
 last_webuntis_import	untissync	de	Letztes Update WebUntis:
 last_update_timetable	untissync	de	Letzer Stundenplanimport:
 last_update_subs	untissync	de	Letzer Vertretungsplanimport:
@@ -65,3 +64,7 @@ cleanup_cal_orphaned	untissync	de	verwaiste Kalendereinträge löschen
 delete_timetables	untissync	de	Stundenpläne löschen
 delete_substitutions	untissync	de	Vertretungsplan löschen
 update_groupmembers	untissync	de	Klassengruppen aktualisieren
+enabled	untissync	de	aktiviert
+enable	untissync	de	aktivieren
+disabled	untissync	de	deaktiviert
+disable	untissync	de	deaktivieren

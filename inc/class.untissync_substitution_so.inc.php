@@ -254,7 +254,7 @@ class untissync_substitution_so extends Api\Storage {
         foreach ($arrTeacher as &$te) {
             $teacher = $untisTeacherSet[$te[$id_key]];
             if(isset($teacher)){
-                $result[] = $teacher['longname'];
+                $result[] = $teacher['te_longname'];
             }
             elseif (isset($te[$name_key])){
                 $result[] = $te[$name_key];
@@ -326,13 +326,14 @@ class untissync_substitution_so extends Api\Storage {
     }
 
     /**
-     * search all teacher ids from substitutions with sub_clean = 0
+     * search all teacher ids (untis-id) from substitutions with sub_clean = 0
      * @param $startYmd
      * @return array
      */
     function parseTeacherUpdate($startYmd){
         $teacher = array();
         $today = new DateTime();
+
 
         $tables = 'egw_untissync_substitution';
         

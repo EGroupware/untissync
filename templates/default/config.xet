@@ -11,7 +11,7 @@
 			<rows>
 				<row>
 					<description value="Version"/>
-					<description value="2022-06-03-0846"/>
+					<description value="2022-06-25-1651"/>
 				</row>
 				<row>
 					<description value="serverurl"/>
@@ -62,7 +62,11 @@
 				<row>
 					<description value="prefix_teachergroup"/>
 					<textbox id="newsettings[webuntis_mapping_prefix_teacher]" maxlength="20" width="30%"/>
-				</row>				
+				</row>
+				<row>
+					<description value="import_teacher_activation"/>
+					<checkbox id="newsettings[import_teacher_activation]"/>
+				</row>
 			</rows>
 		</grid>
 	</template>

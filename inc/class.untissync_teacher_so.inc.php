@@ -29,15 +29,15 @@ class untissync_teacher_so extends Api\Storage {
         
         $this->debug = 0;
         
-        $this->value_col['id'] = 'te_id';
-        $this->value_col['uid'] = 'te_uid';
-        $this->value_col['name'] = 'te_name';
-        $this->value_col['forename'] = 'te_forename';
-        $this->value_col['longname'] = 'te_longname';
-        $this->value_col['active'] = 'te_active';
-        $this->value_col['egw_uid'] = 'te_egw_uid';
-        $this->value_col['created'] = 'te_created';
-        $this->value_col['modified'] = 'te_modified';
+        $this->value_col['te_id'] = 'te_id';
+        $this->value_col['te_uid'] = 'te_uid';
+        $this->value_col['te_name'] = 'te_name';
+        $this->value_col['te_forename'] = 'te_forename';
+        $this->value_col['te_longname'] = 'te_longname';
+        $this->value_col['te_active'] = 'te_active';
+        $this->value_col['te_egw_uid'] = 'te_egw_uid';
+        $this->value_col['te_created'] = 'te_created';
+        $this->value_col['te_modified'] = 'te_modified';
         
         $this->customfields = Storage\Customfields::get($app, false, null, $db);
     }
@@ -56,7 +56,7 @@ class untissync_teacher_so extends Api\Storage {
         $key_col = "";
         
         $filter = array();
-        $filter[] = "te_uid=".$te_uid;        
+        $filter[] = "te_uid=".$te_uid;
         
         $result = $this->query_list($this->value_col, $key_col, $filter);
         
@@ -91,22 +91,22 @@ class untissync_teacher_so extends Api\Storage {
 
     /**
      * Updates EGroupware user id, representing this teacher
-     * @param $egw_uid
-     * @param $te_id
+     * @param $te_egw_uid
+     * @param $te_uid
      * @return bool
      */
-    public function updateEgwUid($egw_uid, $te_id){
+    public function updateEgwUid($te_egw_uid, $te_uid){
         $time = time();
         $key_col = "";
         
         $filter = array();
-        $filter[] = "te_id=".$te_id;
+        $filter[] = "te_uid=".$te_uid;
         
         $result = $this->query_list($this->value_col, $key_col, $filter);
         
         $teacher = array(
-            'te_id' => $te_id,            
-            'te_egw_uid' => $egw_uid,
+            'te_uid' => $te_uid,
+            'te_egw_uid' => $te_egw_uid,
             'te_modified' => $time,
         );
 
@@ -116,7 +116,6 @@ class untissync_teacher_so extends Api\Storage {
         elseif (sizeof($result) == 1){
             $ids = array_keys($result);
             $teacher['te_id'] = $ids[0];
-            
             $this->data = $teacher;
             if(parent::update($teacher, true) != 0) return false;
         }
@@ -133,7 +132,7 @@ class untissync_teacher_so extends Api\Storage {
      * @return int total numbers of rows
      */
     //function get_rows(&$query_in,&$rows){
-    function get_rows($query,&$rows,&$readonlys,$join='',$need_full_no_count=false,$only_keys=false,$extra_cols=array()){
+    function get_rows($query_in,&$rows,&$readonlys,$join='',$need_full_no_count=false,$only_keys=false,$extra_cols=array()){
         $filter = array();
         $filter[] = 'te_egw_uid >= -1';
 
@@ -143,17 +142,64 @@ class untissync_teacher_so extends Api\Storage {
             $search = $this->db->quote($query_in['search'].'%');
             $filter[] = "(te_name like ".$search." OR te_forename like ".$search." OR te_longname like ".$search.")";
         }
+
+        if(!empty($query_in['order'])) {
+            $order = $query_in['order'];
+        }
+
+        $members = array();
+        if($query_in['filter']) {
+            $members = $GLOBALS['egw']->accounts->members($query_in['filter']);
+        }
+
+        if($query_in['filter2'] == 1){
+            $filter[] = "te_active = 1";
+        }
+        elseif($query_in['filter2'] == 2) {
+            $filter[] = "te_active = 0";
+        }
         
         $result = $this->query_list($this->value_col, '', $filter, $order);
         $index = 0;
         foreach($result as $te){
+            if($query_in['filter']){
+                // check if user is groupmember
+                if(!array_key_exists($te['te_egw_uid'], $members)){
+                    continue;
+                }
+            }
             $rows[$index] = $te;
             $rows[$index]['nm_id'] = $index;   
-            $rows[$index]['nr'] = $index + 1;            
+            $rows[$index]['nr'] = $index + 1;
             
             $index++;
         }      
-        return count($result);
+        //return count($result);
+        return $index;
+    }
+
+    /**
+     * Return array with teachers, mapped EGW user active state
+     * qparam $dbkey type of key to be returned 'te_egw_id' or 'te_uid'
+     * @return array
+     */
+    public function getActiveTeachers($dbkey = 'te_egw_uid', $ids_only = true){
+        $result = array();
+        $criteria = array(
+            "te_egw_uid > 0 AND te_active = 1",
+        );
+        $teachers = $this->search($criteria, False);
+
+        foreach($teachers as $key => $value){
+            if($ids_only){
+                $result[] = $value[$dbkey];
+            }
+            else{
+                $result[] = $value;
+            }
+
+        }
+        return $result;
     }
 
     /**

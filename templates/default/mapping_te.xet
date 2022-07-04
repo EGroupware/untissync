@@ -11,23 +11,26 @@
 				<column width="20%"/>
 				<column width="20%"/>
 				<column width="20%"/>
+				<column width="5%"/>
 			</columns>
 			<rows>
 				<row class="th">
 					<nextmatch-header id="id" label=""/>					
-					<nextmatch-sortheader id="longname" label="untis_fullname"/>
-					<nextmatch-sortheader id="name" label="untis_name"/>
-					<nextmatch-sortheader id="forename" label="untis_prename"/>
-					<nextmatch-sortheader id="EGW User" label="egw_user"/>
+					<nextmatch-sortheader id="te_longname" label="untis_fullname"/>
+					<nextmatch-sortheader id="te_name" label="untis_name"/>
+					<nextmatch-sortheader id="te_forename" label="untis_prename"/>
+					<nextmatch-sortheader id="te_egw_uid" label="egw_user"/>
+					<nextmatch-sortheader id="te_active" label="status"/>
 				</row>
 				<row>
 					<description id="${row}[nr]" no_lang="1"/>					
-					<description id="${row}[longname]" no_lang="1"/>
-					<description id="${row}[name]" no_lang="1"/>
-					<description id="${row}[forename]" no_lang="1"/>
+					<description id="${row}[te_longname]" no_lang="1"/>
+					<description id="${row}[te_name]" no_lang="1"/>
+					<description id="${row}[te_forename]" no_lang="1"/>
 					<hbox>
-						<select-account account_type="accounts" id="{$row}[egw_uid]" multiple="false" readonly="true" class="et2_fullWidth" span="1" tags="true"/>
-					</hbox>																
+						<select-account account_type="accounts" id="{$row}[te_egw_uid]" multiple="false" readonly="true" class="et2_fullWidth" span="1" tags="true"/>
+					</hbox>
+					<description id="${row}[te_active]" no_lang="1"/>
 				</row>				
 			</rows>
 		</grid>
@@ -39,6 +42,11 @@
 	</template>
 	
 	<template id="untissync.mapping_te" template="" lang="" group="0" version="16.1">
+		<box id="showtemapmodal" class="modalbg" >
+			<vbox id="showtemapcontent" width="50%">
+				<template id="untissync.mapping_te_edit"/>
+			</vbox>
+		</box>
 		<nextmatch id="nm" no_lang="1" template="untissync.mapping_te.table" header_right="untissync.mapping_te.header_right"/>
 	</template>
 </overlay>

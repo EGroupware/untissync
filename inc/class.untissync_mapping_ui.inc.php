@@ -67,13 +67,32 @@ class untissync_mapping_ui
 	            'caption' => 'Edit',
 	            'default' => true,
 	            'allowOnMultiple' => false,
-	            'url' => 'menuaction=untissync.untissync_mapping_ui.te_edit&nm_id=$id',
-	            'popup' => Link::get_registry('untissync', 'add_popup'),
+	            //'url' => 'menuaction=untissync.untissync_mapping_ui.te_edit&nm_id=$id',
+	            //'popup' => Link::get_registry('untissync', 'add_popup'),
+                'onExecute' => 'javaScript:app.untissync.onTeacherMappingEdit',
 	        ),
 	        'delete' => array(
 	            'caption' => 'Delete',
 	            'allowOnMultiple' => true,
-	        ),	
+	        ),
+            'status'       => array(
+                'caption'      => 'status',
+                'disableClass' => 'noEdit',
+                'children'     => array(
+                    'enable' => array(
+                        'caption'   => 'enable',
+                        'allowOnMultiple' => true,
+                        'icon'      => 'enable',
+                        'onExecute' => 'javaScript:app.untissync.teacher_enable',
+                    ),
+                    'disable' => array(
+                        'caption'   => 'disable',
+                        'allowOnMultiple' => true,
+                        'icon'      => 'disable',
+                        'onExecute' => 'javaScript:app.untissync.teacher_disable',
+                    ),
+                ),
+            ),
 	    );
 	    
 	    return $actions;
@@ -194,7 +213,17 @@ class untissync_mapping_ui
 		}
 
 		$content['msg'] = $msg ? $msg : $_GET['msg'];
-		
+
+        $filter = Api\Cache::getSession('untissync', 'te_mapping_filter');
+        $options = array('account_type' => 'groups');
+        $groups = Api\Accounts::link_query('',$options);
+
+        $groupsFilter = array();
+        $groupsFilter[0] = "alle";
+        foreach($groups as $key => $group){
+            $groupsFilter[$key] = $group;
+        }
+
 		Api\Cache::unsetSession('untissync', 'mapping_te_search');
 
 		// Teacher mapping		
@@ -202,18 +231,20 @@ class untissync_mapping_ui
 	    $content['msg'] = $msg;
 	    
 	    $content['nm']['get_rows']		= 'untissync.untissync_mapping_ui.get_te_rows';
-	    $content['nm']['no_filter'] 	= true;
+	    $content['nm']['no_filter'] 	= false;
 	    $content['nm']['filter_no_lang'] = true;
 	    $content['nm']['no_cat']	= true;
 	    $content['nm']['no_search']	= true;
-	    $content['nm']['no_filter2']	= true;
+	    $content['nm']['no_filter2']	= false;
 	    $content['nm']['bottom_too']	= true;
-	    $content['nm']['order']		= 'nm_id';
+	    $content['nm']['order']		= 'te_name, te_forename';
 	    $content['nm']['sort']		= 'ASC';
 	    $content['nm']['store_state']	= 'get_rows';
 	    $content['nm']['row_id']	= 'nm_id';
 	    $content['nm']['favorites'] = false;
 	    $content['nm']['filter'] = $filter;
+        $content['nm']['options-filter'] = $groupsFilter;
+        $content['nm']['options-filter2'] = array('all', 'enabled', 'disabled');
 	    $content['nm']['actions'] = self::get_te_actions($content);
 	    $content['nm']['default_cols']  = '!legacy_actions';
 	    $content['nm']['no_columnselection'] = false;
@@ -296,12 +327,12 @@ class untissync_mapping_ui
 	        $teacher = $rows[$nm_id];
 	        
 	        $content['nr'] = $teacher['nr'];
-	        $content['egw_uid'] = isset($teacher['egw_uid']) ? $teacher['egw_uid'] : null;
-	        $content['longname'] = $teacher['longname'];
-	        $content['name'] = $teacher['name'];
-	        $content['forename'] = $teacher['forename'];	    
+	        $content['te_egw_uid'] = isset($teacher['te_egw_uid']) ? $teacher['te_egw_uid'] : null;
+	        $content['te_longname'] = $teacher['te_longname'];
+	        $content['te_name'] = $teacher['te_name'];
+	        $content['te_forename'] = $teacher['te_forename'];
 	        
-	        Api\Cache::setSession('untissync', 'mapping_te_id', $teacher['id']);	        
+	        Api\Cache::setSession('untissync', 'mapping_te_id', $teacher['te_id']);
 	    }
 	    else{
 	        Api\Cache::unsetSession('untissync', 'mapping_te_id');
@@ -319,6 +350,62 @@ class untissync_mapping_ui
 	    $etpl->read('untissync.mapping_te_edit');
 	    return $etpl->exec('untissync.untissync_mapping_ui.te_edit',$content,$sel_options,$readonlys,$preserv,2);
 	}
+
+    /**
+     * enable teacher
+     */
+    public function ajax_teacher_enable($enable, $teachers){
+        $msg = '';
+
+        $result = 0;
+        $rows = Api\Cache::getSession('untissync', 'mapping_te_rows');
+
+        $so_teacher = new untissync_teacher_so();
+        foreach($teachers as $tid){
+            if($rows[$tid]['te_egw_uid'] > 0 && $rows[$tid]['te_active'] != $enable) {
+                // change only if teacher is mapped and status will be changed
+                $so_teacher->write($rows[$tid]['te_uid'], $rows[$tid]['te_name'], $rows[$tid]['te_forename'], $rows[$tid]['te_longname'], $rows[$tid]['te_egw_uid'], $enable);
+                $result++;
+            }
+        }
+
+        $data = array(
+            'msg' => $msg." $result teachers " . ($enable ? "enabled!" : "disabled!"),
+        );
+        Api\Json\Response::get()->data($data);
+    }
+
+    /**
+     * edit teacher mapping (laoding)
+     */
+    public function ajax_onTeacherMappingEdit($rowid){
+        $msg = '';
+
+        $result = 0;
+        $rows = Api\Cache::getSession('untissync', 'mapping_te_rows');
+        Api\Cache::setSession('untissync', 'mapping_te_te_uid', $rows[$rowid]['te_uid'],);
+
+        $result = array(
+            'msg' => $msg." $result teachers ",
+            'te_forename' => $rows[$rowid]['te_forename'],
+            'te_name' => $rows[$rowid]['te_name'],
+            'te_longname' => $rows[$rowid]['te_longname'],
+        );
+        Api\Json\Response::get()->data($result);
+    }
+    public function ajax_onTeacherMappingCommit($te_egw_uid){
+        $msg = '';
+        $te_uid = Api\Cache::getSession('untissync', 'mapping_te_te_uid');
+        $result = $this->bo->updateTeacherMapping($te_egw_uid, $te_uid);
+        $data = array();
+        if($result){
+            $data['msg'] = $msg." Successfully updated!";
+        }
+        else{
+            $data['msg'] = $msg." Update failed!";
+        }
+        Api\Json\Response::get()->data($data);
+    }
 	
 	//######################
 	// ROOMS	

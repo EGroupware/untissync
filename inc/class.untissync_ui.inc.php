@@ -158,6 +158,11 @@ class untissync_ui
         $content['category'] = $config['cal_category'];
 		$sel_options['category'] = $this->loadCalCategories();
 
+        $teacher_so = new untissync_teacher_so();
+        $activeTeachers = $teacher_so->getActiveTeachers('te_uid', false);
+        Api\Cache::setSession('untissync', 'activeTeachers', $activeTeachers);
+
+        $content['teacher_active_count'] = count($activeTeachers);
 
 		$this->tmpl->read('untissync.index');
 		return $this->tmpl->exec('untissync.untissync_ui.index',$content,$sel_options,$readonlys,$preserv);
@@ -453,7 +458,12 @@ class untissync_ui
     public function ajax_importSubstitutions(){
         $msg = '';
         $result = $this->bo->importSubstitutions();
-        $msg = $msg.$result." Einträge wurden importiert!";
+        if($result == 1) {
+            $msg = $msg . $result . " Vertretungsplan wurde importiert!";
+        }
+        else{
+            $msg = $msg . $result . " Vertretungspläne wurden importiert!";
+        }
 
         $this->bo->requestLastImportTime($msg);
         $config = untissync_config::read();
@@ -474,11 +484,18 @@ class untissync_ui
 
     /**
      * Imports timetable via AJAX
+     * Don't use this function because of long time running task by this action
+     * @deprecated
      */
-    public function ajax_importTimetable(){
+    /*public function ajax_importTimetable(){
         $msg = '';
         $result = $this->bo->importTimetable($msg);
-        $msg = $msg.$result." Stundenpläne wurden importiert!";
+        if($result == 1){
+            $msg = $msg.$result." Stundenplan wurde importiert!";
+        }
+        else{
+            $msg = $msg.$result." Stundenpläne wurden importiert!";
+        }
 
         $this->bo->requestLastImportTime($msg);
         $config = untissync_config::read();
@@ -495,6 +512,33 @@ class untissync_ui
             'last_update_timetable' => $ts_lut,
         );
         Api\Json\Response::get()->data($data);
+    }*/
+
+    /**
+     * Import timetables by long task dialog
+     * @param $index Index of active teacher to import
+     * @return void
+     */
+    public function ajax_importTimetableLT(int $index){
+        $start = hrtime(true);
+        $msg = '';
+        $response = Api\Json\Response::get();
+        $activeTeachers = Api\Cache::getSession('untissync', 'activeTeachers');
+
+        if($index >= count($activeTeachers)){
+            $msg = "Index out of bounds";
+
+            return $response->data($msg);
+        }
+        else{
+            $ids = array($activeTeachers[$index]['te_uid']);
+            $longname = $activeTeachers[$index]['te_longname'];
+
+            $result = $this->bo->importTimetable($msg, $ids, $index == 0, $index == count($activeTeachers) -1 , $index == 0, $index == count($activeTeachers) -1 );
+            $end = hrtime(true);
+            $msg = ($index + 1).'/'.count($activeTeachers).' '.$longname.' OK ('.number_format(($end - $start) / 1000000000, 2).' s)';
+        }
+        $response->data($msg);
     }
 
     /**

@@ -43,11 +43,15 @@
 						<button disabled="!@admin" statustext="Apply" label="Übernehmen" id="button[apply_category]" image="" background_image="false"/>
 					</hbox>
 				</row>
+				<row>
+					<description value="teacher_active_count"/>
+					<description id="teacher_active_count" width="30%"/>
+				</row>
 			</rows>
 		</grid>
 		<description value="import_update" id="import_update"/>
 		<hbox>
-			<button disabled="!@admin" statustext="import_timetable" label="import_timetable" id="button[update_timetable]" image="" background_image="false" onclick="app.untissync.import_timetable"/>
+			<button disabled="!@admin" statustext="import_timetable" label="import_timetable" id="button[update_timetableLT]" image="" background_image="false" onclick="app.untissync.import_timetableLT"/>
 			<button disabled="!@admin" statustext="import_substitutions" label="import_substitutions" id="button[update_substitution]" image="" background_image="false" onclick="app.untissync.import_substitutions"/>
 			<button disabled="!@admin" statustext="import_timegrid" label="import_timegrid" id="button[update_timegrid]" image="" background_image="false"/>
 			<button disabled="!@admin" statustext="update_groupmembers" label="update_groupmembers" id="button[update_groupmembers]" image="" background_image="false"/>

@@ -57,14 +57,8 @@ class untissync_bo {
 
     /** webuntis-doc: identifies the request, is repeated in the response; not really needed right now*/
 	var $post_id = '73647893';
-	
-	var $lstype = array(
-	    'ls' => 'Unterricht',
-	    'oh' => 'Büro',
-	    'sb' => 'Präsenz',
-	    'bs' => 'Aufsicht',
-	    'ex' => 'Prüfung',
-	);
+
+	var $lstype;
 	
 	// timegrid array day-start-end => name, needed for searching the name of a lesson by start- and endtime
 	var $timegrid = array();
@@ -90,15 +84,23 @@ class untissync_bo {
 	    
 	    $this->bo_calendar_update = new calendar_boupdate();
         $this->so_calendar = new calendar_so();
+
+        $this->lstype = array(
+            'ls' => 'Unterricht',
+            'oh' => 'Büro',
+            'sb' => 'Präsenz',
+            'bs' => 'Aufsicht',
+            'ex' => 'Prüfung',
+        );
 	}
 
     /**
      * Imports subjects and all timetables for each teacher
      * @param $msg
-     * @param false $teacherUntisIDs untis ids of teachers that need updating
+     * @param false|array $teacherUntisIDs untis ids of teachers that need updating
      * @return int number of imported timetables
      */
-	public function importTimetable(&$msg, $teacherUntisIDs = false)
+	public function importTimetable(&$msg, $teacherUntisIDs = false, $doLogin = true, $doLogout = true, $doImportTimeGrid = true, $doUpdClassGroups = true)
 	{
 	    set_time_limit(2400);
 	    $this->debug_log->log(" set time limit: 2400 ", __METHOD__);
@@ -110,12 +112,15 @@ class untissync_bo {
 	    $endDate = new DateTime();
 	    $endDate = $endDate->modify("+$update_timetable_days day");
 
-	    // authenticate
-	    $result = $this->authenticate($msg);
-	    if($result == false){
-	        $msg = $msg." Authentication failed!";
-            return $result;
+        if($doLogin){
+            // authenticate
+            $result = $this->authenticate($msg);
+            if($result == false){
+                $msg = $msg." Authentication failed!";
+                return $result;
+            }
         }
+
 
         // limit startdate and enddate by start and end of actual school year
         $this->limitDates($startDate, $endDate);
@@ -123,7 +128,7 @@ class untissync_bo {
 	    if($teacherUntisIDs == False){
 	        // update all timetables
 	        $criteria = array(
-	            "te_egw_uid > 0",
+	            "te_egw_uid > 0 AND te_active = 1",
 	        );
 	        
 	        $teachers = $this->so_teacher->search($criteria, False); //$this->so_teacher->queryMapped();
@@ -139,21 +144,28 @@ class untissync_bo {
 	        $result = $this->importSubjects();
 	        $this->debug_log->log(" subjects imported ", __METHOD__);
 	    }    	    
-	    	    	    
-	    // import timegrid
-	    $this->so_timegrid->truncate();
-	    $this->importTimegrid();
-	    $this->timegrid = $this->so_timegrid->getTimegridSet();
-	    $this->debug_log->log(" timegrid imported ", __METHOD__);
+
+        if($doImportTimeGrid){
+            // import timegrid
+            $this->so_timegrid->truncate();
+            $this->importTimegrid();
+            $this->timegrid = $this->so_timegrid->getTimegridSet();
+            $this->debug_log->log(" timegrid imported ", __METHOD__);
+        }
 
 	    // update timetables from untis and egw calendar
 	    $this->updateTeacherTimetable($startDate->format('Ymd'), $endDate->format('Ymd'), $teacherUntisIDs);
 	    
 	    $this->debug_log->log(" startDate: ".$startDate->format('Ymd')."; endDate: ".$endDate->format('Ymd'), __METHOD__);
-	    // LOGOUT
-	    $this->logout();    
-	    // update class group members
-	    $this->updateClassGroupsMembers();
+        if($doLogout){
+            // LOGOUT
+            $this->logout();
+        }
+
+        if($doUpdClassGroups){
+            // update class group members
+            $this->updateClassGroupsMembers();
+        }
 
 	    return sizeof($teacherUntisIDs);
 	}
@@ -188,10 +200,14 @@ class untissync_bo {
 		$result = $this->importSubstitutionsPeriod($startYmd, $endDate->format('Ymd'));
 
         // 1. search all teacher untis id, who has to be updated or will be deleted
-        $teacherIDs = $this->so_substitution->parseTeacherUpdate($startYmd);
+        $teacher2Upd = $this->so_substitution->parseTeacherUpdate($startYmd);
 
 		// 2. delete substitutions with clean = -1
 		$this->so_substitution->cleanUp();
+
+        // 3. load active teacher list
+        $activeTeachers = $this->so_teacher->getActiveTeachers('te_uid'); //$this->so_teacher->queryMapped();
+        $teacherIDs = array_intersect($teacher2Upd, $activeTeachers);
 
         //$this->debug_log->log("config->create_cal_events: ".$config['create_cal_events']);
 		if(!$config['create_cal_events']){
@@ -695,6 +711,12 @@ class untissync_bo {
 	    $school = $this->getSchool();
 		$url = $url.'?school='.$school;
 
+        $config = untissync_config::read();
+        $activation = false;
+        if(isset($config['import_teacher_activation'])){
+            $activation = $config['import_teacher_activation'] == 1;
+        }
+
 	    $data = array(
 	        'id' => $this->post_id,
 	        'method' => 'getTeachers',
@@ -753,21 +775,30 @@ class untissync_bo {
             }
 
 	        $egw_uid = 0;
-	        if(count($ids) == 1){
-	            // egroupware user was found
-	            $egw_uid = array_key_first($ids);
-	            $active = true;
-	        }	   
-	        else{
+            $teacher = $this->so_teacher->getTeacherByUntisID($val['id']);
+            if(!$teacher){
+                if(count($ids) == 1){
+                    // egroupware user was newly found
+                    $egw_uid = array_key_first($ids);
+                    $active = $activation; // depends on config
+                }
+                $this->so_teacher->write($val['id'], $val['name'], $val['foreName'],  $val['longName'],  $egw_uid, $active);
+            }
+
+
+            //elseif(count($ids) != 1){
 	            // unique egroupware user was NOT found
+            //    $egw_uid = 0;
+            //   $active = false;
 	            // if teacher was marked as active, then keep binding
-	            $teacher = $this->so_teacher->getTeacherByUntisID($val['id']);
-	            if(isset($teacher) && $teacher['te_egw_uid']){
-	                $active = true;
-	                $egw_uid = $teacher['te_egw_uid'];
-	            }
-	        }
-	        $this->so_teacher->write($val['id'], $val['name'], $val['foreName'],  $val['longName'],  $egw_uid, $active);
+	        //    $teacher = $this->so_teacher->getTeacherByUntisID($val['id']);
+	            //if(isset($teacher) && $teacher['te_egw_uid']){
+	            //    $active = true;
+	            //    $egw_uid = $teacher['te_egw_uid'];
+	            //}
+	        //}
+
+	        //$this->so_teacher->write($val['id'], $val['name'], $val['foreName'],  $val['longName'],  $egw_uid, $active);
 	    }
 	    curl_close($ch);
 	    return true;
@@ -780,8 +811,8 @@ class untissync_bo {
      * @param $te_id
      * @return bool
      */
-	public function updateTeacherMapping($egw_uid, $te_id){
-	    return $this->so_teacher->updateEgwUid($egw_uid, $te_id);	 
+	public function updateTeacherMapping($te_egw_uid, $te_uid){
+	    return $this->so_teacher->updateEgwUid($te_egw_uid, $te_uid);
 	}
 
     /**
@@ -790,7 +821,7 @@ class untissync_bo {
      * @return bool
      */
 	public function deleteTeacher(array $teacher){
-	    $this->so_teacher->delete($teacher['id']);
+	    $this->so_teacher->delete($teacher['te_id']);
 	    return true;
 	}
 	/**
@@ -1275,7 +1306,7 @@ class untissync_bo {
 	            break;
 	        case "sb":
 	            // Präsenz
-	            $title = $title.utf8_encode("Präsenz");
+	            $title = 'Präsenz';//$title.utf8_encode("Präsenz");
 	            break;
 	        case "bs":
 	            // Aufsicht Pause

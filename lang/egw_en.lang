@@ -29,7 +29,6 @@ endtime	untissync	en	end
 text	untissync	en	text
 room_old	untissync	en	room (originally)
 subject	untissync	en	subject
-status	untissync	en	status:
 last_webuntis_import	untissync	en	last update WebUntis:
 last_update_timetable	untissync	en	last import of the timetable:
 last_update_subs	untissync	en	last import of substitutions:
@@ -65,3 +64,7 @@ cleanup_cal_orphaned	untissync	en	delete orphaned calendar items
 delete_timetables	untissync	en	delete timetables
 delete_substitutions	untissync	en	delete substitution plan
 update_groupmembers	untissync	en	update class groups
+enabled	untissync	de	enabled
+enable	untissync	de	enable
+disabled	untissync	de	disabled
+disable	untissync	de	disable

@@ -57,8 +57,8 @@ var UntissyncApp = /** @class */ (function (_super) {
      */
     UntissyncApp.prototype.import_substitutions = function () {
         var et2 = this.et2;
-        egw.loading_prompt('untissync', true, egw.lang('please wait...'));
-        egw.json('untissync.untissync_ui.ajax_importSubstitutions', [], function (_data) {
+        this.egw.loading_prompt('untissync', true, egw.lang('please wait...'));
+        this.egw.json('untissync.untissync_ui.ajax_importSubstitutions', [], function (_data) {
             egw.loading_prompt('untissync', false);
             document.getElementById('untissync-index_last_webuntis_import').innerText = _data.last_webuntis_import;
             document.getElementById('untissync-index_last_update_subs').innerText = _data.last_update_subs;
@@ -68,15 +68,40 @@ var UntissyncApp = /** @class */ (function (_super) {
     /**
      * Import timetables via AJAX
      */
-    UntissyncApp.prototype.import_timetable = function () {
-        var et2 = this.et2;
-        egw.loading_prompt('untissync', true, egw.lang('please wait...'));
-        egw.json('untissync.untissync_ui.ajax_importTimetable', [], function (_data) {
+    /*import_timetable(){
+        egw.loading_prompt('untissync',true,egw.lang('please wait...'));
+        egw.json('untissync.untissync_ui.ajax_importTimetable',[], function(_data){
             egw.loading_prompt('untissync', false);
             document.getElementById('untissync-index_last_webuntis_import').innerText = _data.last_webuntis_import;
             document.getElementById('untissync-index_last_update_timetable').innerText = _data.last_update_timetable;
             egw(window).refresh(_data.msg, 'untissync', null, 'update');
         }).sendRequest(true);
+    }*/
+    /**
+     * Import timetables via AJAX and long task
+     */
+    UntissyncApp.prototype.import_timetableLT = function () {
+        var activeCount = parseInt(document.getElementById("untissync-index_teacher_active_count").innerText);
+        var menuaction = 'untissync.untissync_ui.ajax_importTimetableLT';
+        var indices = [];
+        var msg1 = egw.lang('import %1 timetables', "" + activeCount);
+        for (var i = 0; i < activeCount; i++) {
+            indices[i] = i;
+        }
+        var callbackDialog = function (btn) {
+            if (btn === et2_dialog.YES_BUTTON) {
+                // long task dialog for de/activation accounts
+                et2_dialog.long_task(function (_val, _resp) {
+                    if (_val && _resp.type !== 'error') {
+                        console.log(_val, _resp);
+                    }
+                    else {
+                    }
+                }, msg1, 'import timetables', menuaction, indices, 'untissync');
+            }
+        };
+        // confirmation dialog
+        et2_dialog.show_dialog(callbackDialog, egw.lang('Are you sure you want to import %1 timetables?', activeCount), egw.lang('Import timetables?'), {}, et2_dialog.BUTTON_YES_NO, et2_dialog.WARNING_MESSAGE, undefined, egw);
     };
     /**
      * Import timetables via AJAX
@@ -127,6 +152,73 @@ var UntissyncApp = /** @class */ (function (_super) {
             egw.loading_prompt('untissync', false);
             egw(window).refresh(_data.msg, 'untissync', null, 'update');
         }).sendRequest(true);
+    };
+    /**
+     * enable teachers
+     */
+    UntissyncApp.prototype.teacher_enable = function (_action, _senders) {
+        var enable = true;
+        var teachers = [];
+        egw.loading_prompt('untissync', true, egw.lang('please wait 1...'));
+        for (var i = 0; i < _senders.length; i++) {
+            teachers.push(_senders[i].id.split("::").pop());
+        }
+        egw.json('untissync.untissync_mapping_ui.ajax_teacher_enable', [enable, teachers], function (_data) {
+            egw.loading_prompt('untissync', false);
+            egw(window).refresh(_data.msg, 'untissync', null, 'update');
+        }).sendRequest(true);
+    };
+    /**
+     * disable teachers
+     */
+    UntissyncApp.prototype.teacher_disable = function (_action, _senders) {
+        var enable = false;
+        var teachers = [];
+        egw.loading_prompt('untissync', true, egw.lang('please wait 1...'));
+        for (var i = 0; i < _senders.length; i++) {
+            teachers.push(_senders[i].id.split("::").pop());
+        }
+        egw.json('untissync.untissync_mapping_ui.ajax_teacher_enable', [enable, teachers], function (_data) {
+            egw.loading_prompt('untissync', false);
+            egw(window).refresh(_data.msg, 'untissync', null, 'update');
+        }).sendRequest(true);
+    };
+    /**
+     * edit teachers mapping
+     */
+    UntissyncApp.prototype.onTeacherMappingEdit = function (_action, _senders) {
+        var row_id = _senders[0]._index;
+        var func = 'untissync.untissync_mapping_ui.ajax_onTeacherMappingEdit';
+        this.egw.json(func, [row_id], function (result) {
+            var modal = document.getElementById("untissync-mapping_te_showtemapmodal");
+            modal.style.display = "block";
+            for (var key in result) {
+                var widget_id = 'untissync-mapping_te_' + key;
+                var widget = document.getElementById(widget_id);
+                if (widget) {
+                    widget.innerText = result[key];
+                }
+            }
+        }).sendRequest(true);
+    };
+    /**
+     * commit teacher mapping
+     * @param _action
+     * @param _senders
+     */
+    UntissyncApp.prototype.onTeacherMappingCommit = function (_action, _senders) {
+        var te_egw_uid = document.getElementById("untissync-mapping_te_te_egw_uid").value;
+        var func = 'untissync.untissync_mapping_ui.ajax_onTeacherMappingCommit';
+        this.egw.json(func, [te_egw_uid], function (result) {
+            // todo msg
+            egw(window).refresh(result.msg, 'untissync', null, 'update');
+        }).sendRequest(true);
+        var modal = document.getElementById("untissync-mapping_te_showtemapmodal");
+        modal.style.display = "none";
+    };
+    UntissyncApp.prototype.onTeacherMappingCancel = function (_action, _senders) {
+        var modal = document.getElementById("untissync-mapping_te_showtemapmodal");
+        modal.style.display = "none";
     };
     return UntissyncApp;
 }(egw_app_1.EgwApp));
