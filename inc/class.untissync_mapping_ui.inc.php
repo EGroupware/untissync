@@ -283,71 +283,7 @@ class untissync_mapping_ui
 	}
 	
 	
-	/**
-	 * Edit untissync teacher mapping
-	 *
-	 * @param array $content
-	 * @param string $msg
-	 */
-	public function te_edit(array $content = null,$msg='')
-	{
-	    $etpl = new Etemplate('untissync.mapping_te_edit');
-	    $sel_options = array();
-	    $preserv = array();
-	    
-	    if ($_GET['msg']) $msg = $_GET['msg'];	    
-	    if (isset($_GET['nm_id'])) $nm_id = $_GET['nm_id'];
-	    
-	    
-	    if (is_array($content))
-	    {
-            if(is_array($content['button'])) {
-                $button = key($content['button']);
-                unset($content['button']);
-                if ($button) {
-                    if ($button == 'save') {
-                        $result = $this->bo->updateTeacherMapping($content['egw_uid'], Api\Cache::getSession('untissync', 'mapping_te_id'));
-                        if ($result) {
-                            $msg = "Update succeeded!";
-                            // Api\Cache::unsetSession('untissync', 'mapping_te_search');
-                            Framework::refresh_opener($msg, 'untissync');
-                        } else {
-                            $msg = lang('Error updating the entry!!!');
-                        }
-                        Framework::window_close();
-                    }
-                }
-            }
-	    }	    
-	    
-	    if(isset($nm_id)){
-	        $rows = Api\Cache::getSession('untissync', 'mapping_te_rows');	        
-	        $teacher = $rows[$nm_id];
-	        
-	        $content['nr'] = $teacher['nr'];
-	        $content['te_egw_uid'] = isset($teacher['te_egw_uid']) ? $teacher['te_egw_uid'] : null;
-	        $content['te_longname'] = $teacher['te_longname'];
-	        $content['te_name'] = $teacher['te_name'];
-	        $content['te_forename'] = $teacher['te_forename'];
-	        
-	        Api\Cache::setSession('untissync', 'mapping_te_id', $teacher['te_id']);
-	    }
-	    else{
-	        Api\Cache::unsetSession('untissync', 'mapping_te_id');
-	    }
-	    
-	    $content['msg'] = $msg ? $msg : $_GET['msg'];	    	 
-	    
-	    $readonlys = array(
-	        'button[cancel]'     => false,
-	        'button[save]'     => false,	       
-	    );
-	    
-	    $preserv = $sel_options;
-	    
-	    $etpl->read('untissync.mapping_te_edit');
-	    return $etpl->exec('untissync.untissync_mapping_ui.te_edit',$content,$sel_options,$readonlys,$preserv,2);
-	}
+
 
     /**
      * enable teacher
@@ -507,12 +443,12 @@ class untissync_mapping_ui
 	/**
 	 * apply an action
 	 *
-	 * @param string/int $action 'status_to',set status to timeshhets
-	 * @param array $checked timesheet id's to use if !$use_all
-	 * @param boolean $use_all if true use all timesheets of the current selection (in the session)
+	 * @param string/int $action 'status_to'
+	 * @param array $checked id's to use if !$use_all
+	 * @param boolean $use_all if true use all rooms of the current selection (in the session)
 	 * @param int &$success number of succeded actions
 	 * @param int &$failed number of failed actions (not enought permissions)
-	 * @param string &$action_msg translated verb for the actions, to be used in a message like %1 timesheets 'deleted'
+	 * @param string &$action_msg translated verb for the actions, to be used in a message like %1 rooms 'deleted'
 	 * @param string/array $session_name 'index' or 'email', or array with session-data depending if we are in the main list or the popup
 	 * @return boolean true if all actions succeded, false otherwise
 	 */
@@ -676,82 +612,7 @@ class untissync_mapping_ui
 	    return $total;
 	}
 	
-	
-	/**
-	 * List untissync teacher mapping
-	 *
-	 * @param array $content
-	 * @param string $msg
-	 */
-	public function ro_edit(array $content = null,$msg='')
-	{
-	    $etpl = new Etemplate('untissync.mapping_ro_edit');	    
-	    $preserv = array();
-	    
-	    if ($_GET['msg']) $msg = $_GET['msg'];
-	    if (isset($_GET['nm_id'])) $nm_id = $_GET['nm_id'];
-	    
-	    
-	    if (is_array($content))
-	    {
-            if(is_array($content['button'])) {
-                $button = key($content['button']);
-                unset($content['button']);
-                if ($button) {
-                    if ($button == 'save') {
-                        $result = $this->bo->updateRoomMapping($content['room'], Api\Cache::getSession('untissync', 'mapping_ro_id'));
-                        if ($result) {
-                            $msg = "Update succeeded!";
-                            //Api\Cache::unsetSession('untissync', 'mapping_ro_search');
-                            Framework::refresh_opener($msg, 'untissync');
-                        } else {
-                            $msg = lang('Error updating the entry!!!');
-                        }
-                        Framework::window_close();
-                    }
-                }
-            }
-	    }
-	    
-	    if(isset($nm_id)){
-	        $rows = Api\Cache::getSession('untissync', 'mapping_ro_rows');
-	        $room = $rows[$nm_id];
-	        
-	        $content['nr'] = $room['nr'];
-	        $content['egw_uid'] = isset($room['egw_uid']) ? $room['egw_uid'] : null;
-	        $content['longname'] = $room['longname'];
-	        $content['name'] = $room['name'];
-	        $content['room'] = $room['egw_res_id'];
-	        
-	        Api\Cache::setSession('untissync', 'mapping_ro_id', $room['id']);
-	    }
-	    else{
-	        Api\Cache::unsetSession('untissync', 'mapping_ro_id');
-	    }
-	    
-	    $content['msg'] = $msg ? $msg : $_GET['msg'];
-	    
-	    $readonlys = array(
-	        'button[cancel]'     => false,
-	        'button[save]'     => false,
-	    );
-	    
-	    
-	    $sel_options = array();
-	    $rooms = $this->bo->getAvailableRooms();
-	    
-	    foreach($rooms as $key => $value){
-	        $sel_options['room'][$key] = $value['name'];
-	    }
-	   	    
-	    $preserv = $sel_options;
-	    
-	    $etpl->read('untissync.mapping_ro_edit');
-	    return $etpl->exec('untissync.untissync_mapping_ui.ro_edit',$content,$sel_options,$readonlys,$preserv,2);
-	}
-	
-	
-	
+
 	
 	//######################
 	// KLASSEN
@@ -956,70 +817,6 @@ class untissync_mapping_ui
 	}
 	
 	
-	/**
-	 * List untissync teacher mapping
-	 *
-	 * @param array $content
-	 * @param string $msg
-	 */
-	public function kl_edit(array $content = null,$msg='')
-	{
-	    $etpl = new Etemplate('untissync.mapping_kl_edit');
-	    $sel_options = array();
-	    
-	    if ($_GET['msg']) $msg = $_GET['msg'];
-	    if (isset($_GET['nm_id'])) $nm_id = $_GET['nm_id'];
-	    
-	    
-	    
-	    if (is_array($content))
-	    {
-            if(is_array($content['button'])) {
-                $button = key($content['button']);
-                unset($content['button']);
-                if ($button) {
-                    $kl_id = Api\Cache::getSession('untissync', 'mapping_kl_id');
-                    if ($button == 'save' && $kl_id > 0) {
-                        $result = $this->bo->updateClassMapping($content['egw_uid'], $kl_id, $content['egw_group_id']);
-                        if ($result) {
-                            $msg = "Update succeeded!";
-                            //Api\Cache::unsetSession('untissync', 'mapping_kl_search');
-                            Framework::refresh_opener($msg, 'untissync');
-                        } else {
-                            $msg = lang('Error updating the entry!!!');
-                        }
-                        Framework::window_close();
-                    }
-                }
-            }
-	    }
-	    
-	    if(isset($nm_id)){
-	        $rows = Api\Cache::getSession('untissync', 'mapping_kl_rows');
-	        $class = $rows[$nm_id];
-	        
-	        $content['nr'] = $class['nr'];
-	        $content['egw_uid'] = isset($class['egw_uid']) ? $class['egw_uid'] : null;
-	        $content['longname'] = $class['longname'];
-	        $content['name'] = $class['name'];
-	        
-	        Api\Cache::setSession('untissync', 'mapping_kl_id', $class['id']);
-	    }
-	    else{
-	        Api\Cache::unsetSession('untissync', 'mapping_kl_id');
-	    }
-	    
-	    $content['msg'] = $msg ? $msg : $_GET['msg'];
-	    
-	    $readonlys = array(
-	        'button[cancel]'     => false,
-	        'button[save]'     => false,
-	    );
-	    
-	    $preserv = $sel_options;
-	    
-	    $etpl->read('untissync.mapping_kl_edit');
-	    return $etpl->exec('untissync.untissync_mapping_ui.kl_edit',$content,$sel_options,$readonlys,$preserv,2);
-	}
+	
 }
 
