@@ -65,6 +65,26 @@
   left: 102px;
   z-index: 99;
 }
+
+#untissync-mapping_kl_untissync-mapping_kl_edit{
+  position: absolute;
+  border: 2px solid black;
+  background-color: #ffffff;
+  padding: 4px;
+  top: 55px;
+  left: 102px;
+  z-index: 99;
+}
+
+#untissync-mapping_ro_untissync-mapping_ro_edit{
+  position: absolute;
+  border: 2px solid black;
+  background-color: #ffffff;
+  padding: 4px;
+  top: 55px;
+  left: 102px;
+  z-index: 99;
+}
 /*###########################################
 #                                           #
 #       dialogHeader                       #

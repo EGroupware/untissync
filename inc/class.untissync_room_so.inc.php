@@ -94,7 +94,7 @@ class untissync_room_so extends Api\Storage {
      * @param $ro_id
      * @return bool
      */
-    public function updateEgwResId($egw_res_id, $ro_id){
+    public function updateMapping($ro_id, $egw_res_id){
         $time = time();
         $key_col = "";
         
@@ -116,7 +116,7 @@ class untissync_room_so extends Api\Storage {
         }
         elseif (sizeof($result) == 1){
             $ids = array_keys($result);
-            $teacher['ro_id'] = $ids[0];
+            $room['ro_id'] = $ids[0];
             
             $this->data = $room;
             if(parent::update($room, true) != 0) return false;

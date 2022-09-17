@@ -111,12 +111,13 @@ class untissync_class_so extends Api\Storage {
 
     /**
      * saves EGroupware user id, representing this school class
-     * @param $egw_uid
+
      * @param $kl_id
-     * @param $kl_egw_group_id
+     * @param $egw_uid
+     * @param $egw_group_id
      * @return bool
      */
-    public function updateEgwUid($egw_uid, $kl_id, $kl_egw_group_id){
+    public function updateMapping($kl_id, $egw_uid, $egw_group_id){
         $time = time();
         $key_col = "";
         
@@ -128,7 +129,7 @@ class untissync_class_so extends Api\Storage {
         $class = array(
             'kl_id' => $kl_id,
             'kl_egw_uid' => $egw_uid,
-            'kl_egw_group_id' => $kl_egw_group_id,
+            'kl_egw_group_id' => $egw_group_id,
             'kl_modified' => $time,
         );
 
@@ -184,7 +185,7 @@ class untissync_class_so extends Api\Storage {
     
     /**
      * requests EGroupware classes id by untis classesr id
-     * @param unknown $te_uid
+     * @param unknown $kl_uid
      * @return unknown
      */
     public function getClassByUntisID($kl_uid){

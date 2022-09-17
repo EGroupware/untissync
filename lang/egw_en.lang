@@ -68,3 +68,5 @@ enabled	untissync	de	enabled
 enable	untissync	de	enable
 disabled	untissync	de	disabled
 disable	untissync	de	disable
+import_teacher_activation	untissync	de	Activate imported teachers if a user account could be assigned
+teacher_active_count	untissync	de	Activated teachers

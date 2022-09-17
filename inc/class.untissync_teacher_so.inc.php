@@ -95,17 +95,16 @@ class untissync_teacher_so extends Api\Storage {
      * @param $te_uid
      * @return bool
      */
-    public function updateEgwUid($te_egw_uid, $te_uid){
+    public function updateMapping($te_id, $te_egw_uid){
         $time = time();
         $key_col = "";
         
         $filter = array();
-        $filter[] = "te_uid=".$te_uid;
+        $filter[] = "te_id=".$te_id;
         
         $result = $this->query_list($this->value_col, $key_col, $filter);
         
         $teacher = array(
-            'te_uid' => $te_uid,
             'te_egw_uid' => $te_egw_uid,
             'te_modified' => $time,
         );

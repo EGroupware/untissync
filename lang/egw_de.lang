@@ -68,3 +68,5 @@ enabled	untissync	de	aktiviert
 enable	untissync	de	aktivieren
 disabled	untissync	de	deaktiviert
 disable	untissync	de	deaktivieren
+import_teacher_activation	untissync	de	Importierte Lehrer aktivieren, wenn ein Benutzerkonto zugeordnet werden konnte
+teacher_active_count	untissync	de	Aktivierte Lehrer

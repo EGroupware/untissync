@@ -41,6 +41,11 @@
 	</template>
 	
 	<template id="untissync.mapping_kl" template="" lang="" group="0" version="16.1">
+		<box id="showklmapmodal" class="modalbg" >
+			<vbox id="showklmapcontent" width="50%">
+				<template id="untissync.mapping_kl_edit"/>
+			</vbox>
+		</box>
 		<nextmatch id="nm" no_lang="1" template="untissync.mapping_kl.table" header_right="untissync.mapping_kl.header_right"/>
 	</template>
 </overlay>

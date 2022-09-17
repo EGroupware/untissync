@@ -34,6 +34,11 @@
 	</template>
 	
 	<template id="untissync.mapping_ro" template="" lang="" group="0" version="16.1">
+		<box id="showromapmodal" class="modalbg" >
+			<vbox id="showromapcontent" width="50%">
+				<template id="untissync.mapping_ro_edit"/>
+			</vbox>
+		</box>
 		<nextmatch id="nm" no_lang="1" template="untissync.mapping_ro.table" header_right="untissync.mapping_ro.header_right"/>
 	</template>
 </overlay>

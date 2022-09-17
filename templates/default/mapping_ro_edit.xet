@@ -24,14 +24,14 @@
 					<description id="longname" no_lang="1"/>
 					<description id="name" no_lang="1"/>
 					<hbox>
-						<menulist>
-							<menupopup type="select" statustext="Raum" id="room" multiple="false" search="true"/>
+						<menulist class="et2_fullWidth">
+							<menupopup type="select" statustext="Raum" id="rooms" multiple="false" search="true" no_lang="true"/>
 						</menulist>
 					</hbox>										
 				</row>				
 			</rows>
-		</grid>		
-		<button statustext="Save" label="Save" id="button[save]" image="save" background_image="1"/>
-		<button statustext="Cancel" label="Cancel" id="button[cancel]" onclick="window.close();" image="cancel" background_image="1"/>
+		</grid>
+		<button label="Ok" tabindex="6" id="button[ok]" class="button_ok" onclick="app.untissync.onRoomMappingCommit" image="check" background_image="true"/>
+		<button label="Cancel" tabindex="6" id="button[cancel]" class="button_cancel" onclick="app.untissync.onRoomMappingCancel" image="cancel" background_image="true"/>
 	</template>
 </overlay>

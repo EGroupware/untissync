@@ -67,9 +67,7 @@ class untissync_mapping_ui
 	            'caption' => 'Edit',
 	            'default' => true,
 	            'allowOnMultiple' => false,
-	            //'url' => 'menuaction=untissync.untissync_mapping_ui.te_edit&nm_id=$id',
-	            //'popup' => Link::get_registry('untissync', 'add_popup'),
-                'onExecute' => 'javaScript:app.untissync.onTeacherMappingEdit',
+	            'onExecute' => 'javaScript:app.untissync.onTeacherMappingEdit',
 	        ),
 	        'delete' => array(
 	            'caption' => 'Delete',
@@ -383,7 +381,7 @@ class untissync_mapping_ui
 
         $result = 0;
         $rows = Api\Cache::getSession('untissync', 'mapping_te_rows');
-        Api\Cache::setSession('untissync', 'mapping_te_te_uid', $rows[$rowid]['te_uid'],);
+        Api\Cache::setSession('untissync', 'mapping_te_id', $rows[$rowid]['te_id'],);
 
         $result = array(
             'msg' => $msg." $result teachers ",
@@ -395,8 +393,78 @@ class untissync_mapping_ui
     }
     public function ajax_onTeacherMappingCommit($te_egw_uid){
         $msg = '';
-        $te_uid = Api\Cache::getSession('untissync', 'mapping_te_te_uid');
-        $result = $this->bo->updateTeacherMapping($te_egw_uid, $te_uid);
+        $te_id = Api\Cache::getSession('untissync', 'mapping_te_id');
+        $result = $this->bo->updateTeacherMapping($te_id, $te_egw_uid);
+        $data = array();
+        if($result){
+            $data['msg'] = $msg." Successfully updated!";
+        }
+        else{
+            $data['msg'] = $msg." Update failed!";
+        }
+        Api\Json\Response::get()->data($data);
+    }
+
+    /**
+     * edit klasse mapping (laoding)
+     */
+    public function ajax_onKlasseMappingEdit($rowid){
+        $msg = '';
+
+        $result = 0;
+        $rows = Api\Cache::getSession('untissync', 'mapping_kl_rows');
+        Api\Cache::setSession('untissync', 'mapping_kl_id', $rows[$rowid]['id']);
+
+        $result = array(
+            'msg' => $msg." $result klassen ",
+            'longname' => $rows[$rowid]['longname'],
+            'name' => $rows[$rowid]['name'],
+        );
+        Api\Json\Response::get()->data($result);
+    }
+    public function ajax_onKlasseMappingCommit($egw_uid, $egw_group_id){
+        $msg = '';
+        $kl_id = Api\Cache::getSession('untissync', 'mapping_kl_id');
+        $result = $this->bo->updateClassMapping($kl_id, $egw_uid, $egw_group_id);
+        $data = array();
+        if($result){
+            $data['msg'] = $msg." Successfully updated!";
+        }
+        else{
+            $data['msg'] = $msg." Update failed!";
+        }
+        Api\Json\Response::get()->data($data);
+    }
+
+    /**
+     * edit klasse mapping (laoding)
+     */
+    public function ajax_onRoomMappingEdit($rowid){
+        $msg = '';
+
+        $result = 0;
+        $rows = Api\Cache::getSession('untissync', 'mapping_ro_rows');
+        Api\Cache::setSession('untissync', 'mapping_ro_id', $rows[$rowid]['id'],);
+
+        $result = array(
+            'msg' => $msg." $result rooms ",
+            'longname' => $rows[$rowid]['longname'],
+            'name' => $rows[$rowid]['name'],
+        );
+
+        // list rooms
+        $result['rooms'] = array();
+        $rooms = $this->bo->getAvailableRooms();
+        foreach($rooms as $key => $value){
+            $result['rooms'][$key] = $value['name'];
+        }
+
+        Api\Json\Response::get()->data($result);
+    }
+    public function ajax_onRoomMappingCommit($ro_egw_uid){
+        $msg = '';
+        $ro_id = Api\Cache::getSession('untissync', 'mapping_ro_id');
+        $result = $this->bo->updateRoomMapping($ro_id, $ro_egw_uid);
         $data = array();
         if($result){
             $data['msg'] = $msg." Successfully updated!";
@@ -419,13 +487,12 @@ class untissync_mapping_ui
 	public static function get_ro_actions(array $content)
 	{
 	    $actions = array(
-	        'edit' => array(
-	            'caption' => 'Edit',
-	            'default' => true,
-	            'allowOnMultiple' => false,
-	            'url' => 'menuaction=untissync.untissync_mapping_ui.ro_edit&nm_id=$id',
-	            'popup' => Link::get_registry('untissync', 'add_popup'),
-	        ),
+            'edit' => array(
+                'caption' => 'Edit',
+                'default' => true,
+                'allowOnMultiple' => false,
+                'onExecute' => 'javaScript:app.untissync.onRoomMappingEdit',
+            ),
 	        'delete' => array(
 	            'caption' => 'Delete',
 	            'allowOnMultiple' => true,
@@ -698,13 +765,12 @@ class untissync_mapping_ui
 	public static function get_kl_actions(array $content)
 	{
 	    $actions = array(
-	        'edit' => array(
-	            'caption' => 'Edit',
-	            'default' => true,
-	            'allowOnMultiple' => false,
-	            'url' => 'menuaction=untissync.untissync_mapping_ui.kl_edit&nm_id=$id',
-	            'popup' => Link::get_registry('untissync', 'add_popup'),
-	        ),
+            'edit' => array(
+                'caption' => 'Edit',
+                'default' => true,
+                'allowOnMultiple' => false,
+                'onExecute' => 'javaScript:app.untissync.onKlasseMappingEdit',
+            ),
 	        'delete' => array(
 	            'caption' => 'Delete',
 	            'allowOnMultiple' => true,

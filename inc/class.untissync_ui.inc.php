@@ -534,7 +534,7 @@ class untissync_ui
             $ids = array($activeTeachers[$index]['te_uid']);
             $longname = $activeTeachers[$index]['te_longname'];
 
-            $result = $this->bo->importTimetable($msg, $ids, $index == 0, $index == count($activeTeachers) -1 , $index == 0, $index == count($activeTeachers) -1 );
+            $result = $this->bo->importTimetable($msg, $ids, $index == 0, $index == count($activeTeachers) -1 , $index == 0, $index == count($activeTeachers)-1);
             $end = hrtime(true);
             $msg = ($index + 1).'/'.count($activeTeachers).' '.$longname.' OK ('.number_format(($end - $start) / 1000000000, 2).' s)';
         }

@@ -469,11 +469,13 @@ class untissync_bo {
 	    $startD = DateTime::createFromFormat('Ymd', $start);
 	    $endD = DateTime::createFromFormat('Ymd', $end);
 	    
-	    if($startDate->diff($startD) < 0){
+
+        if($startDate < $startD){
 	        // $startDate before first day in school year
 	        $startDate = $startD;
 	    }
-	    if($endDate->diff($endD) > 0){
+
+        if($endDate > $endD){
 	        // $endDate after last day in school year
 	        $endDate = $endD;
 	    }
@@ -622,7 +624,7 @@ class untissync_bo {
 	            'id' => $object_id,
 	            'type' => $type,
 	            'startDate' => $startDate,
-	            'endDate' => $endDate, 
+	            'endDate' => $endDate,
 	        ),
 	    );
 	    
@@ -811,8 +813,8 @@ class untissync_bo {
      * @param $te_id
      * @return bool
      */
-	public function updateTeacherMapping($te_egw_uid, $te_uid){
-	    return $this->so_teacher->updateEgwUid($te_egw_uid, $te_uid);
+	public function updateTeacherMapping($te_id, $te_egw_uid){
+	    return $this->so_teacher->updateMapping($te_id, $te_egw_uid);
 	}
 
     /**
@@ -838,8 +840,8 @@ class untissync_bo {
      * @param $ro_id
      * @return bool
      */
-	public function updateRoomMapping($egw_res_id, $ro_id){
-	    return $this->so_room->updateEgwResId($egw_res_id, $ro_id);	 
+	public function updateRoomMapping($ro_id, $egw_res_id){
+	    return $this->so_room->updateMapping($ro_id, $egw_res_id);
 	}
 
     /**
@@ -861,13 +863,13 @@ class untissync_bo {
 	// CLASSES
     /**
      * Saves class mapping, modified by user
+     * @param $kl_id untis class id
      * @param $egw_uid
-     * @param $kl_id
-     * @param $kl_egw_group_id
+     * @param $egw_group_id
      * @return bool
      */
-	public function updateClassMapping($egw_uid, $kl_id, $kl_egw_group_id){
-	    return $this->so_class->updateEgwUid($egw_uid, $kl_id, $kl_egw_group_id);
+	public function updateClassMapping($kl_id, $egw_uid, $egw_group_id){
+	    return $this->so_class->updateMapping($kl_id, $egw_uid, $egw_group_id);
 	}
 
     /**
@@ -1236,12 +1238,14 @@ class untissync_bo {
 	    $dateEnd = new Api\DateTime($dateEnd, Api\DateTime::$user_timezone);
 
 	    $category = isset($config['cal_category']) ? $config['cal_category'] : 0;
-	    
+
+        $classes = implode(',', array_column($kl, 'kl_name'));
+
 	    $event = array(
 	        'title' => $this->createEventTitle($ttevent, $te, $ro, $kl, $su),
 	        'start' => $dateStart->format('ts'), //$dateStart->format('Y-m-d Hi'),
 	        'end' => $dateEnd->format('ts'), //$dateEnd->format('Y-m-d Hi'),
-	        'description' => $ttevent['tt_activitytype'].' ('.$ttevent['tt_uid'].')',
+	        'description' => $ttevent['tt_activitytype'].' ('.$classes.')',
 	        'location' => $this->arraytoCSV($ro, 'ro_name')
         );
 

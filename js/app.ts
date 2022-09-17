@@ -79,18 +79,18 @@ class UntissyncApp extends EgwApp
 	 * Import timetables via AJAX and long task
 	 */
 	import_timetableLT(){
-		var activeCount = parseInt(document.getElementById("untissync-index_teacher_active_count").innerText);
+		let activeCount = parseInt(document.getElementById("untissync-index_teacher_active_count").innerText);
 
-		var menuaction = 'untissync.untissync_ui.ajax_importTimetableLT';
-		var indices = [];
-		var msg1 = egw.lang('import %1 timetables', ""+activeCount);
+		let menuaction = 'untissync.untissync_ui.ajax_importTimetableLT';
+		let indices = [];
+		let msg1 = egw.lang('import %1 timetables', ""+activeCount);
 
-		for (var i=0;i< activeCount;i++)
+		for (let i=0;i< activeCount;i++)
 		{
 			indices[i] = i;
 		}
 
-		var callbackDialog = function (btn){
+		let callbackDialog = function (btn){
 			if (btn === et2_dialog.YES_BUTTON)
 			{
 				// long task dialog for de/activation accounts
@@ -241,6 +241,114 @@ class UntissyncApp extends EgwApp
 	}
 	onTeacherMappingCancel(_action, _senders){
 		var modal = document.getElementById("untissync-mapping_te_showtemapmodal");
+		modal.style.display = "none";
+	}
+
+	/**
+	 * edit klasse mapping
+	 */
+	onKlasseMappingEdit(_action, _senders){
+		var row_id = _senders[0]._index;
+		var func = 'untissync.untissync_mapping_ui.ajax_onKlasseMappingEdit';
+
+		this.egw.json(func, [row_id], function (result) {
+			var modal = document.getElementById("untissync-mapping_kl_showklmapmodal");
+			modal.style.display = "block";
+
+			for (var key in result){
+				var widget_id = 'untissync-mapping_kl_' + key;
+
+				var widget = <HTMLInputElement>document.getElementById(widget_id);
+				if (widget) {
+					widget.innerText = result[key];
+				}
+			}
+		}).sendRequest(true);
+	}
+
+	/**
+	 * commit klasse mapping
+	 * @param _action
+	 * @param _senders
+	 */
+	onKlasseMappingCommit(_action, _senders){
+		var egw_uid = document.getElementById("untissync-mapping_kl_egw_uid").value;
+		var egw_group_id = document.getElementById("untissync-mapping_kl_egw_group_id").value;
+		var func = 'untissync.untissync_mapping_ui.ajax_onKlasseMappingCommit';
+
+		this.egw.json(func, [egw_uid, egw_group_id], function (result) {
+			// todo msg
+			egw(window).refresh(result.msg, 'untissync', null, 'update');
+		}).sendRequest(true);
+
+		var modal = document.getElementById("untissync-mapping_kl_showklmapmodal");
+		modal.style.display = "none";
+	}
+	onKlasseMappingCancel(_action, _senders){
+		var modal = document.getElementById("untissync-mapping_kl_showklmapmodal");
+		modal.style.display = "none";
+	}
+
+	/**
+	 * edit klasse mapping
+	 */
+	onRoomMappingEdit(_action, _senders){
+		var row_id = _senders[0]._index;
+		var func = 'untissync.untissync_mapping_ui.ajax_onRoomMappingEdit';
+
+		this.egw.json(func, [row_id], function (result) {
+			var modal = document.getElementById("untissync-mapping_ro_showromapmodal");
+			modal.style.display = "block";
+
+			for (var key in result){
+				if(key != "rooms"){
+					var widget_id = 'untissync-mapping_ro_' + key;
+
+					var widget = <HTMLInputElement>document.getElementById(widget_id);
+					if (widget) {
+						widget.innerText = result[key];
+					}
+				}
+				else{
+					var widget = <HTMLSelectElement> document.getElementById('untissync-mapping_ro_' + key);
+
+					if(widget){
+						var length = widget.options.length;
+						for (var i = length-1; i >= 0; i--) {
+							widget.options[i] = null;
+						}
+						for (var res in result['rooms']){
+							var opt = document.createElement("option");
+							opt.value = res;
+							opt.text = result['rooms'][res];
+							widget.options.add(opt);
+						}
+					}
+					widget.style.display = "block";
+				}
+			}
+		}).sendRequest(true);
+	}
+
+	/**
+	 * commit klasse mapping
+	 * @param _action
+	 * @param _senders
+	 */
+	onRoomMappingCommit(_action, _senders){
+		var ro_egw_uid = document.getElementById("untissync-mapping_ro_rooms").value;
+		var func = 'untissync.untissync_mapping_ui.ajax_onRoomMappingCommit';
+
+		this.egw.json(func, [ro_egw_uid], function (result) {
+			// todo msg
+			egw(window).refresh(result.msg, 'untissync', null, 'update');
+		}).sendRequest(true);
+
+		var modal = document.getElementById("untissync-mapping_ro_showromapmodal");
+		modal.style.display = "none";
+	}
+	onRoomMappingCancel(_action, _senders){
+		var modal = document.getElementById("untissync-mapping_ro_showromapmodal");
 		modal.style.display = "none";
 	}
 }
