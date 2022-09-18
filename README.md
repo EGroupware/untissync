@@ -34,33 +34,33 @@ __For the purpose of testing or developing you can create a playground in WebUnt
 This step makes it easier to troubleshoot any errors that may occur due to incorrect synchronization.
 3. Open the site configuration of UntisSync and complete your settings:
 
-| name           	| value                                                 	|
-|---------------------	|-------------------------------------------------------	|
-| WebUntis Server-URL 	| https://_servername_.webuntis.com/WebUntis/jsonrpc.do 	|
-|                     	| _Replace 'servername' with the WebUntis servername for your institution._                                     |
-|                     	|                                                       	|
-| WebUntis school name  | _Enter your school mandant name_                          |
-|                     	|                                                       	|
-| WebUntis username     | `egroupware`                                              |
-|                       | _Enter the username you created in WebUntis._             |
-| WebUntis password     | _Enter the password for this user._                       |
-|                       |                                                           |
-| Owner of calendar events | `untissync`                                            |
-|                       | _This user becomes the owner of the events._              |
-|                       |                                                           |
-| number of days for which the timetable should be loaded in advance | _Enter the number of days for which the data should be imported from WebUntis (default: 14)_ |
-|                       |                                                           |
-| integrate the timetable in the calendar | _select the checkbox if the timetables should be imported into the EGroupware calendar_ |
-|                       |                                                           |
-| remove expired calendar entries | _If the checkbox is selected, expired events in the EGroupware calender will be removed._ |
-|                       |                                                           |
-| prefix of the EGroupware user, representing a class (default: Klasse_) | _For example a class in Untis is named like '5A' which belongs to a (technical) user in EGroupware with the Login-ID 'Klasse_5A'. The given prefix enables the automatic linking of the classes from WebUntis with the corresponding users from EGroupware._|
-|                       |                                                           |  
-| Update EGroupware group of teaching teachers per class after import | _Select the checkbox if the teacher group of the classes should also be updated after each complete import of the timetable._ |
-|                       |                                                           |
-| Prefix of the EGroupware group of teaching teachers per class (default: Lehrer_)  | _The given prefix enables the automatic linking of the classes from WebUntis with his teacher group from EGroupware._|
-
- 
+| name           	| value                                                 	                                                                                                                                                                                                      |
+|---------------------	|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| WebUntis Server-URL 	| https://_servername_.webuntis.com/WebUntis/jsonrpc.do 	                                                                                                                                                                                                      |
+|                     	| _Replace 'servername' with the WebUntis servername for your institution._                                                                                                                                                                                    |
+|                     	| 	                                                                                                                                                                                                                                                            |
+| WebUntis school name  | _Enter your school mandant name_                                                                                                                                                                                                                             |
+|                     	| 	                                                                                                                                                                                                                                                            |
+| WebUntis username     | `egroupware`                                                                                                                                                                                                                                                 |
+|                       | _Enter the username you created in WebUntis._                                                                                                                                                                                                                |
+| WebUntis password     | _Enter the password for this user._                                                                                                                                                                                                                          |
+|                       |                                                                                                                                                                                                                                                              |
+| Owner of calendar events | `untissync`                                                                                                                                                                                                                                                  |
+|                       | _This user becomes the owner of the events._                                                                                                                                                                                                                 |
+|                       |                                                                                                                                                                                                                                                              |
+| number of days for which the timetable should be loaded in advance | _Enter the number of days for which the data should be imported from WebUntis (default: 14)_                                                                                                                                                                 |
+|                       |                                                                                                                                                                                                                                                              |
+| integrate the timetable in the calendar | _select the checkbox if the timetables should be imported into the EGroupware calendar_                                                                                                                                                                      |
+|                       |                                                                                                                                                                                                                                                              |
+| remove expired calendar entries | _If the checkbox is selected, expired events in the EGroupware calender will be removed._                                                                                                                                                                    |
+|                       |                                                                                                                                                                                                                                                              |
+| prefix of the EGroupware user, representing a class (default: Klasse_) | _For example a class in Untis is named like '5A' which belongs to a (technical) user in EGroupware with the Login-ID 'Klasse_5A'. The given prefix enables the automatic linking of the classes from WebUntis with the corresponding users from EGroupware._ |
+|                       |                                                                                                                                                                                                                                                              |  
+| Update EGroupware group of teaching teachers per class after import | _Activate the checkbox if the teacher group of the classes should also be updated after each complete import of the timetable._                                                                                                                              |
+|                       |                                                                                                                                                                                                                                                              |
+| Prefix of the EGroupware group of teaching teachers per class (default: Lehrer_)  | _The given prefix enables the automatic linking of the classes from WebUntis with his teacher group from EGroupware._                                                                                                                                        |
+|                       |                                                                                                                                                                                                                                                              |
+| Load rooms and classes from Webuntis before importing  | _Activate the checkbox if you want the classes and rooms to be updated by WebUntis before each synchronization._                                                                                                                                             |
 
 ### Initial data import
 This step is necessary if calendar entries are to be updated in EGroupware. From the sidebar in UntisSync you can open the mapping tools for teachers, classes and rooms.
