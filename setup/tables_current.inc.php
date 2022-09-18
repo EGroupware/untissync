@@ -24,7 +24,7 @@ $phpgw_baseline = array(
 			'te_egw_uid' => array('type' => 'int','precision' => '11','nullable' => False,'comment' => 'egw cuser uid'),
 		    'te_created' => array('type' => 'int','meta' => 'timestamp','precision' => '8','comment' => 'timestamp of the creation date'),
 		    'te_modified' => array('type' => 'int','meta' => 'timestamp','precision' => '8','comment' => 'timestamp of the last modificatione'),
-
+            'te_last_untis_sync' => array('type' => 'int','meta' => 'timestamp','precision' => '8','comment' => 'timestamp of the last untis sync'),
 		),
 		'pk' => array('te_id'),
 		'fk' => array(),

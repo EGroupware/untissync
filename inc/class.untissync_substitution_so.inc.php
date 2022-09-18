@@ -332,13 +332,9 @@ class untissync_substitution_so extends Api\Storage {
      */
     function parseTeacherUpdate($startYmd){
         $teacher = array();
-        $today = new DateTime();
-
 
         $tables = 'egw_untissync_substitution';
-        
         $cols = 'egw_untissync_participant.pa_partid, egw_untissync_participant.pa_partorgid';
-        
         $where = array(
             "egw_untissync_substitution.sub_clean <= 0",
             "egw_untissync_participant.pa_parenttable = 'sub'",
@@ -346,7 +342,6 @@ class untissync_substitution_so extends Api\Storage {
             "egw_untissync_substitution.sub_date >= $startYmd",
         );
         
-        //$join = ' egw_untissync_substitution.sub_id = egw_untissync_participant.pa_parentid ';
         $join = ' INNER JOIN egw_untissync_participant ON egw_untissync_substitution.sub_id = egw_untissync_participant.pa_parentid ';
         
         $result = $this->db->select($tables, $cols, $where, '', '', False, '', False, 0, $join);

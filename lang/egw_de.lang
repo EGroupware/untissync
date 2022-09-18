@@ -70,3 +70,5 @@ disabled	untissync	de	deaktiviert
 disable	untissync	de	deaktivieren
 import_teacher_activation	untissync	de	Importierte Lehrer aktivieren, wenn ein Benutzerkonto zugeordnet werden konnte
 teacher_active_count	untissync	de	Aktivierte Lehrer
+sync_participants	untissync	de	Räume und Klassen vor dem Import aus WebUntis laden
+last_sync	untissync	de	letzte Synchronisation

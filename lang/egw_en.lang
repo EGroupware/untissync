@@ -70,3 +70,5 @@ disabled	untissync	de	disabled
 disable	untissync	de	disable
 import_teacher_activation	untissync	de	Activate imported teachers if a user account could be assigned
 teacher_active_count	untissync	de	Activated teachers
+sync_participants	untissync	de	Load rooms and classes from Webuntis before importing
+last_sync	untissync	de	last sync

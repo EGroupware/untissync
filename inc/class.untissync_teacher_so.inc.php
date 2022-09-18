@@ -38,10 +38,27 @@ class untissync_teacher_so extends Api\Storage {
         $this->value_col['te_egw_uid'] = 'te_egw_uid';
         $this->value_col['te_created'] = 'te_created';
         $this->value_col['te_modified'] = 'te_modified';
+        $this->value_col['te_last_untis_sync'] = 'te_last_untis_sync';
         
         $this->customfields = Storage\Customfields::get($app, false, null, $db);
     }
-    
+
+    /**
+     * updates laste untis sync timestamp
+     * @param $te_uid
+     * @return void
+     */
+    function update_untis_syn_ts($te_id){
+        $time = time();
+        $teacher = array(
+            'te_id' => $te_id,
+            'te_last_untis_sync' => $time,
+        );
+
+        $this->data = $teacher;
+        return parent::update($teacher, true);
+    }
+
     /**
      * 
      * @param unknown $te_uid webuntis teacher id
@@ -182,21 +199,20 @@ class untissync_teacher_so extends Api\Storage {
      * qparam $dbkey type of key to be returned 'te_egw_id' or 'te_uid'
      * @return array
      */
-    public function getActiveTeachers($dbkey = 'te_egw_uid', $ids_only = true){
+    public function getActiveTeachers(){
         $result = array();
         $criteria = array(
             "te_egw_uid > 0 AND te_active = 1",
         );
-        $teachers = $this->search($criteria, False);
+        $order = "te_last_untis_sync";
+        $teachers = $this->search($criteria, False, $order);
 
-        foreach($teachers as $key => $value){
-            if($ids_only){
-                $result[] = $value[$dbkey];
-            }
-            else{
-                $result[] = $value;
-            }
-
+        foreach($teachers as $key => $val){
+            $result[$val['te_uid']] = array(
+                    'te_id' => $val['te_id'],
+                    'te_uid' => $val['te_uid'],
+                    'te_longname' => $val['te_longname'],
+                );
         }
         return $result;
     }

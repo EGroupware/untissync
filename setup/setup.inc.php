@@ -16,7 +16,7 @@ if (!defined('UNTISSYNC_APP'))
 
 $setup_info[UNTISSYNC_APP]['name']      = 'untissync';
 $setup_info[UNTISSYNC_APP]['title']     = 'UntisSync';
-$setup_info[UNTISSYNC_APP]['version']   = '21.1';
+$setup_info[UNTISSYNC_APP]['version']   = '21.1.1';
 $setup_info[UNTISSYNC_APP]['app_order'] = 100;
 
 $setup_info[UNTISSYNC_APP]['tables'][]    = 'egw_untissync_teacher';

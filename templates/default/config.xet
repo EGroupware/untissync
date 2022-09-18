@@ -67,6 +67,10 @@
 					<description value="import_teacher_activation"/>
 					<checkbox id="newsettings[import_teacher_activation]"/>
 				</row>
+				<row>
+					<description value="sync_participants"/>
+					<checkbox id="newsettings[sync_participants]"/>
+				</row>
 			</rows>
 		</grid>
 	</template>

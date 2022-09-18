@@ -90,3 +90,9 @@ function untissync_upgrade20_1_001()
     return $GLOBALS['setup_info']['untissync']['currentver'] = '21.1';
 }
 
+function untissync_upgrade21_1()
+{
+    $GLOBALS['egw_setup']->oProc->AddColumn('egw_untissync_teacher','te_last_untis_sync', array('type' => 'int','meta' => 'timestamp','precision' => '8','comment' => 'timestamp of the last untis sync'));
+    return $GLOBALS['setup_info']['untissync']['currentver'] = '21.1.1';
+}
+

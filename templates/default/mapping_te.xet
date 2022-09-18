@@ -12,6 +12,7 @@
 				<column width="20%"/>
 				<column width="20%"/>
 				<column width="5%"/>
+				<column width="15%"/>
 			</columns>
 			<rows>
 				<row class="th">
@@ -21,6 +22,7 @@
 					<nextmatch-sortheader id="te_forename" label="untis_prename"/>
 					<nextmatch-sortheader id="te_egw_uid" label="egw_user"/>
 					<nextmatch-sortheader id="te_active" label="status"/>
+					<nextmatch-sortheader id="te_last_untis_sync" label="last_sync"/>
 				</row>
 				<row>
 					<description id="${row}[nr]" no_lang="1"/>					
@@ -31,6 +33,7 @@
 						<select-account account_type="accounts" id="{$row}[te_egw_uid]" multiple="false" readonly="true" class="et2_fullWidth" span="1" tags="true"/>
 					</hbox>
 					<description id="${row}[te_active]" no_lang="1"/>
+					<date-time id="${row}[te_last_untis_sync]" readonly="true"/>
 				</row>				
 			</rows>
 		</grid>

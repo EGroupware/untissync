@@ -159,8 +159,7 @@ class untissync_ui
 		$sel_options['category'] = $this->loadCalCategories();
 
         $teacher_so = new untissync_teacher_so();
-        $activeTeachers = $teacher_so->getActiveTeachers('te_uid', false);
-        Api\Cache::setSession('untissync', 'activeTeachers', $activeTeachers);
+        $activeTeachers = $teacher_so->getActiveTeachers();
 
         $content['teacher_active_count'] = count($activeTeachers);
 
@@ -523,7 +522,8 @@ class untissync_ui
         $start = hrtime(true);
         $msg = '';
         $response = Api\Json\Response::get();
-        $activeTeachers = Api\Cache::getSession('untissync', 'activeTeachers');
+        $teacher_so = new untissync_teacher_so();
+        $activeTeachers = $teacher_so->getActiveTeachers();
 
         if($index >= count($activeTeachers)){
             $msg = "Index out of bounds";
@@ -531,8 +531,15 @@ class untissync_ui
             return $response->data($msg);
         }
         else{
-            $ids = array($activeTeachers[$index]['te_uid']);
-            $longname = $activeTeachers[$index]['te_longname'];
+            $keys = array_keys($activeTeachers);
+            $actualKey = $keys[$index];
+            $ids = array(
+                $keys[$index] => array(
+                        'te_id' => $activeTeachers[$actualKey]['te_id'],
+                        'te_uid' => $activeTeachers[$actualKey]['te_uid'],
+                    ),
+            );
+            $longname = $activeTeachers[$actualKey]['te_longname'];
 
             $result = $this->bo->importTimetable($msg, $ids, $index == 0, $index == count($activeTeachers) -1 , $index == 0, $index == count($activeTeachers)-1);
             $end = hrtime(true);

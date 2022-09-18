@@ -130,11 +130,14 @@ class untissync_bo {
 	        $criteria = array(
 	            "te_egw_uid > 0 AND te_active = 1",
 	        );
-	        
-	        $teachers = $this->so_teacher->search($criteria, False); //$this->so_teacher->queryMapped();
+	        $order = "te_last_untis_sync";
+	        $teachers = $this->so_teacher->search($criteria, False, $order); //$this->so_teacher->queryMapped();
 	        $teacherUntisIDs = array();
 	        foreach($teachers as $teacher){
-	            $teacherUntisIDs[] = $teacher['te_uid'];
+	            $teacherUntisIDs[$teacher['te_uid']] = array(
+                    'te_id' => $teacher['te_id'],
+                    'te_uid' => $teacher['te_uid'],
+                );
 	        }	        
 
 	        $jobStart = time();
@@ -143,7 +146,13 @@ class untissync_bo {
 	        // import subjects
 	        $result = $this->importSubjects();
 	        $this->debug_log->log(" subjects imported ", __METHOD__);
-	    }    	    
+	    }
+
+        // import participants data if configured
+        if($config['sync_participants'] && $doLogin){
+            $this->importClasses();
+            $this->importRooms();
+        }
 
         if($doImportTimeGrid){
             // import timegrid
@@ -206,8 +215,8 @@ class untissync_bo {
 		$this->so_substitution->cleanUp();
 
         // 3. load active teacher list
-        $activeTeachers = $this->so_teacher->getActiveTeachers('te_uid'); //$this->so_teacher->queryMapped();
-        $teacherIDs = array_intersect($teacher2Upd, $activeTeachers);
+        $activeTeachers = $this->so_teacher->getActiveTeachers(); //$this->so_teacher->queryMapped();
+        $teacherIDs = array_intersect_key($activeTeachers, $teacher2Upd); // TODO refactor!
 
         //$this->debug_log->log("config->create_cal_events: ".$config['create_cal_events']);
 		if(!$config['create_cal_events']){
@@ -398,6 +407,7 @@ class untissync_bo {
      * Delete all substitutinos
      */
     public function deleteSubstitutions(&$msg = ''){
+        $intResult = 0;
         $result = $this->so_substitution->search('');
 
         foreach ($result as $sub){
@@ -406,7 +416,10 @@ class untissync_bo {
             // delete substitution
             $this->so_substitution->delete($sub['sub_id']);
         }
-        return sizeof($result);
+        if(is_countable($result)){
+            $intResult = sizeof($result);
+        }
+        return $intResult;
     }
 
     /**
@@ -571,20 +584,22 @@ class untissync_bo {
 	 * @param array $teacherUntisID
 	 * @return string|mixed
 	 */
-	public function updateTeacherTimetable($startDate, $endDate, array $teacherUntisID)
+	public function updateTeacherTimetable($startDate, $endDate, array $teacherIDs)
 	{
-	    // TODO reload teacher, class and rooms nto cache!
+	    // TODO reload teacher, class and rooms from cache!
 
-	    $len = sizeof($teacherUntisID);
+	    $len = sizeof($teacherIDs);
 	    $counter = 0;
-	    
-	    foreach($teacherUntisID as $teuid){
-	        $this->debug_log->log("Import teacher timetable for  teacher untis id:".$teuid, __METHOD__);
+        $so_teacher = new untissync_teacher_so();
+
+	    foreach($teacherIDs as $key => $val){
+            $te_uid = $val['te_uid'];
+	        $this->debug_log->log("Import teacher timetable for  teacher untis id:".$te_uid, __METHOD__);
 	        
 	        // mark tt events as unclean
-	        $this->so_timetable->markUnClean($teuid);
+	        $this->so_timetable->markUnClean($te_uid);
 	        // import
-	        $ttevents = $this->importSingleTeacherTimetable($startDate, $endDate, $teuid);
+	        $ttevents = $this->importSingleTeacherTimetable($startDate, $endDate, $te_uid);
 	        
 	        if(is_array($ttevents)){
 	            foreach($ttevents as $tt){
@@ -594,9 +609,12 @@ class untissync_bo {
 	        }
 	        
 	        // delete alle timetable events with tt_clean = -1, delete old events only if config[cleanup_cal_events] == 1
-	        $this->cleanUpTimetableEvents($teuid);
-	        
-	        if($counter % 10 == 0){
+	        $this->cleanUpTimetableEvents($te_uid);
+
+            // update last untis sync timestamp
+            $so_teacher->update_untis_syn_ts($val['te_id']);
+
+            if($counter % 10 == 0){
 	            $this->debug_log->log(" ... ".$counter." teacher imported; ".number_format(100 * $counter / $len, 2)." %", __METHOD__);
 	        }
 	        $counter++;
@@ -991,8 +1009,6 @@ class untissync_bo {
 	    $options['account_type'] = 'accounts';
 	    
 	    $config = untissync_config::read();
-
-	    $prefix_class_teacher = $config['webuntis_mapping_prefix_teacher'];
 
 	    $url = $this->getURL();
 	    
