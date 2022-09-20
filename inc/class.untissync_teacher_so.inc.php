@@ -224,7 +224,7 @@ class untissync_teacher_so extends Api\Storage {
         $result = array();
         $rows = $this->query_list($this->value_col);
         foreach($rows as $te){
-            $result[$te['uid']] = $te;
+            $result[$te['te_uid']] = $te;
         }
         return $result;
     }

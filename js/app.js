@@ -133,15 +133,28 @@ var UntissyncApp = /** @class */ (function (_super) {
             egw(window).refresh(_data.msg, 'untissync', null, 'update');
         }).sendRequest(true);
     };
-    /**
-     * Cleanup timetables
-     */
-    UntissyncApp.prototype.delete_timetables = function () {
-        egw.loading_prompt('untissync', true, egw.lang('please wait...'));
-        egw.json('untissync.untissync_ui.ajax_deleteTimetables', [], function (_data) {
-            egw.loading_prompt('untissync', false);
-            egw(window).refresh(_data.msg, 'untissync', null, 'update');
-        }).sendRequest(true);
+    UntissyncApp.prototype.delete_timetablesLT = function () {
+        var activeCount = parseInt(document.getElementById("untissync-index_teacher_all_count").innerText);
+        var menuaction = 'untissync.untissync_ui.ajax_deleteTimetablesLT';
+        var indices = [];
+        var msg1 = egw.lang('clear %1 timetables', "" + activeCount);
+        for (var i = 0; i < activeCount; i++) {
+            indices[i] = i;
+        }
+        var callbackDialog = function (btn) {
+            if (btn === et2_dialog.YES_BUTTON) {
+                // long task dialog for de/activation accounts
+                et2_dialog.long_task(function (_val, _resp) {
+                    if (_val && _resp.type !== 'error') {
+                        console.log(_val, _resp);
+                    }
+                    else {
+                    }
+                }, msg1, 'clear timetables', menuaction, indices, 'untissync');
+            }
+        };
+        // confirmation dialog
+        et2_dialog.show_dialog(callbackDialog, egw.lang('Are you sure you want to clear %1 timetables?', activeCount), egw.lang('Clear timetables?'), {}, et2_dialog.BUTTON_YES_NO, et2_dialog.WARNING_MESSAGE, undefined, egw);
     };
     /**
      * Cleanup substitutions

@@ -381,26 +381,30 @@ class untissync_bo {
     /**
      * Delete all timetables
      */
-    public function deleteTimetables(&$msg = ''){
-        $value_col = array();
-        $value_col['id'] = 'tt_id';
-        $value_col['uid'] = 'tt_uid';
-        $value_col['egw_cal_id'] = 'tt_egw_cal_id';
-
-        $result = $this->so_timetable->query_list($value_col);
-
-        foreach ($result as $tt){
-            // delete participants
-            $this->so_participant->deleteAllParticipants($tt['id'], 'tt');
-            if($tt['egw_cal_id']) {
-                // delete egroupware cal event
-                $this->so_calendar->delete($tt['egw_cal_id']);
-            }
-            // delete timetable event
-            $this->so_timetable->delete($tt['id']);
+    public function deleteTimetables(&$msg = '', $te_uid = -1){
+        $resultCount = 0;
+        $filter = array();
+        if($te_uid > 0){
+            $filter[] = "tt_teuid = ".$te_uid;
         }
 
-        return sizeof($result);
+        $result = $this->so_timetable->search(null, false, null, null, null, false, 'AND', false, $filter);
+
+        if(is_countable($result)){
+            foreach ($result as $tt){
+                // delete participants
+                $this->so_participant->deleteAllParticipants($tt['id'], 'tt');
+                if($tt['tt_egw_cal_id']) {
+                    // delete egroupware cal event
+                    $this->so_calendar->delete($tt['tt_egw_cal_id']);
+                }
+                // delete timetable event
+                $this->so_timetable->delete($tt['tt_id']);
+            }
+
+            $resultCount = sizeof($result);
+        }
+        return $resultCount;
     }
 
     /**

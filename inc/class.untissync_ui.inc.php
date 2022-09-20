@@ -64,6 +64,7 @@ class untissync_ui
 	 */
 	function index($content='', $msg='')
 	{
+        $teacher_so = new untissync_teacher_so();
 		$sel_options = array();
 		$preserv = array();
 		if (is_array($content))
@@ -162,6 +163,7 @@ class untissync_ui
         $activeTeachers = $teacher_so->getActiveTeachers();
 
         $content['teacher_active_count'] = count($activeTeachers);
+        $content['teacher_all_count'] = count($teacher_so->getUntisTeacherSet());
 
 		$this->tmpl->read('untissync.index');
 		return $this->tmpl->exec('untissync.untissync_ui.index',$content,$sel_options,$readonlys,$preserv);
@@ -523,11 +525,18 @@ class untissync_ui
         $msg = '';
         $response = Api\Json\Response::get();
         $teacher_so = new untissync_teacher_so();
-        $activeTeachers = $teacher_so->getActiveTeachers();
+
+        if($index == 0){
+            $activeTeachers = $teacher_so->getActiveTeachers();
+            Api\Cache::setSession('untissync', 'active_teachers', $activeTeachers);
+        }
+        else{
+            $activeTeachers = Api\Cache::getSession('untissync', 'active_teachers');
+        }
+
 
         if($index >= count($activeTeachers)){
             $msg = "Index out of bounds";
-
             return $response->data($msg);
         }
         else{
@@ -586,15 +595,29 @@ class untissync_ui
     /**
      * Delete all timetables items and calendar events
      */
-    public function ajax_deleteTimetables(){
+    public function ajax_deleteTimetablesLT(int $index){
+        $start = hrtime(true);
         $msg = '';
+        $response = Api\Json\Response::get();
+        $teacher_so = new untissync_teacher_so();
+        $allTeachers = $teacher_so->getUntisTeacherSet();
 
-        $result = $this->bo->deleteTimetables($msg);
+        if($index >= count($allTeachers)){
+            $msg = "Index out of bounds";
 
-        $data = array(
-            'msg' => $msg." $result calendar events deleted!",
-        );
-        Api\Json\Response::get()->data($data);
+            return $response->data($msg);
+        }
+        else{
+            $keys = array_keys($allTeachers);
+            $actualKey = $keys[$index];
+
+            $longname = $allTeachers[$actualKey]['te_longname'];
+
+            $result = $this->bo->deleteTimetables($msg, $allTeachers[$actualKey]['te_uid']);
+            $end = hrtime(true);
+            $msg = ($index + 1).'/'.count($allTeachers).' '.$longname.' OK ('.$result.' items deleted, '.number_format(($end - $start) / 1000000000, 2).' s)';
+        }
+        $response->data($msg);
     }
 
     /**

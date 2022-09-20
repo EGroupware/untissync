@@ -47,6 +47,10 @@
 					<description value="teacher_active_count"/>
 					<description id="teacher_active_count" width="30%"/>
 				</row>
+				<row>
+					<description value="teacher_all_count"/>
+					<description id="teacher_all_count" width="30%"/>
+				</row>
 			</rows>
 		</grid>
 		<description value="import_update" id="import_update"/>
@@ -67,7 +71,7 @@
 		<description value="cleanup" id="cleanup"/>
 		<hbox>
 			<button disabled="!@admin" statustext="cleanup_cal_orphaned" label="cleanup_cal_orphaned" id="button[cleanup_cal_orphaned]" image="" background_image="false" onclick="app.untissync.cleanup_orphaned"/>
-			<button disabled="!@admin" statustext="delete_timetables" label="delete_timetables" id="button[delete_timetables]" image="" background_image="false" onclick="app.untissync.delete_timetables"/>
+			<button disabled="!@admin" statustext="delete_timetables" label="delete_timetables" id="button[delete_timetables]" image="" background_image="false" onclick="app.untissync.delete_timetablesLT"/>
 			<button disabled="!@admin" statustext="delete_substitutions" label="delete_substitutions" id="button[delete_substitutions]" image="" background_image="false" onclick="app.untissync.delete_substitutions"/>
 		</hbox>
 
