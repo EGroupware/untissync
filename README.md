@@ -29,10 +29,16 @@ this name from the source code of the WebUntis login page (search for _mandantNa
 __For the purpose of testing or developing you can create a playground in WebUntis! Make sure you do not use unnecessary polling on the WebUntis production API!__
 
 ###  Configuration of EGroupware
-1. Install UntisSync from the EGroupware setup. Configure run rights for the UntisSync application.
-2. Create a new (technical) user `untissync` who will later become the owner of the calendar entries. Login via this user will not be necessary.
+1. Add untissync app to EGroupware docker container 
+(see also https://github.com/EGroupware/egroupware/wiki/Installation-using-egroupware-docker-RPM-DEB-package#how-to-install-egroupware-gmbhs-epl-version):
+mkdir -p /usr/share/egroupware (if it does not yet exist!)
+cd /usr/share/egroupware
+git clone EGroupware/untissync 
+docker restart egroupware (to restart the docker container)
+2. Install UntisSync from the EGroupware setup. Configure run rights for the UntisSync application.
+3. Create a new (technical) user `untissync` who will later become the owner of the calendar entries. Login via this user will not be necessary.
 This step makes it easier to troubleshoot any errors that may occur due to incorrect synchronization.
-3. Open the site configuration of UntisSync and complete your settings:
+4. Open the site configuration of UntisSync and complete your settings:
 
 | name           	| value                                                 	                                                                                                                                                                                                      |
 |---------------------	|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
