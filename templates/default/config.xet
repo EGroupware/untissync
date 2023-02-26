@@ -71,6 +71,10 @@
 					<description value="sync_participants"/>
 					<checkbox id="newsettings[sync_participants]"/>
 				</row>
+				<row>
+					<description value="cleanup_cal_orphaned"/>
+					<checkbox id="newsettings[cleanup_cal_orphaned]"/>
+				</row>
 			</rows>
 		</grid>
 	</template>

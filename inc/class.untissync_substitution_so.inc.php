@@ -41,6 +41,24 @@ class untissync_substitution_so extends Api\Storage {
         'holi' => 'holiday',
         'stxt' => 'substitution text',
     );
+
+    var $types_german = array(
+        'cancel' => 'Entfall',
+        'subst' => 'Lehrervertretung',
+        'add' => 'zusätzliche Stunde',
+        'shift' => 'verschobene Stunde',
+        'rmchg' => 'Raumwechsel',
+        'rmlk' => 'gesperrte Stunde',
+        'bs' => 'Pausenaufsicht',
+        'oh' => 'Bürostunde',
+        'sb' => 'Reserve',
+        'other' => 'sonstige',
+        'free' => 'Freistunde',
+        'exam' => 'Prüfung',
+        'ac' => 'Aktivität',
+        'holi' => 'Ferien',
+        'stxt' => 'Vertretungstext',
+    );
     
     var $weekdays = array(
         1 => 'So',
@@ -469,7 +487,7 @@ class untissync_substitution_so extends Api\Storage {
             $rows[] = array(
                 'nm_id' => $item['sub_id'],
                 'date' => $this->weekdays[$dayInWeek].' '.$date->format('d.m.Y'),
-                'type' => $item['sub_type'],
+                'type' => $this->types_german[$item['sub_type']],
                 'txt' => $item['sub_txt'],
                 'lesson' => $lesson,
                 'start' => $starttime,

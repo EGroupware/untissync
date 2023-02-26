@@ -159,7 +159,7 @@ class untissync_bo {
             $this->so_timegrid->truncate();
             $this->importTimegrid();
             $this->timegrid = $this->so_timegrid->getTimegridSet();
-            $this->debug_log->log(" timegrid imported ", __METHOD__);
+            //this->debug_log->log(" timegrid imported ", __METHOD__);
         }
 
 	    // update timetables from untis and egw calendar
@@ -607,8 +607,10 @@ class untissync_bo {
 	        
 	        if(is_array($ttevents)){
 	            foreach($ttevents as $tt){
-	                // update a single event, incl. set flag for clean up
-	                $this->updateSingleCalItem($tt);
+	                // update a single event (if not cancelled), incl. set flag for clean up
+                    if($tt['tt_code'] != 'cancelled'){
+                        $this->updateSingleCalItem($tt);
+                    }
 	            }
 	        }
 	        
@@ -1605,6 +1607,7 @@ class untissync_bo {
 	 * Update timetable by asyncservice
 	 */
 	public function async_update_timetable(){
+        $config = untissync_config::read();
 		$this->debug_log->enableAsyncLog(true);
 
 		$msg = "START async_update_timetable";
@@ -1613,6 +1616,11 @@ class untissync_bo {
 		$len = $this->importTimetable($msg);
 		$msg = $msg.$len." timetables imported";
 		$this->debug_log->log($msg);
+
+        if($config['cleanup_cal_orphaned']){
+            // cleanup orphaned cal events
+            $this->cleanupOrphaned();
+        }
 
 		$msg = "FINISHED async_update_timetable";
 		$this->debug_log->log($msg);
