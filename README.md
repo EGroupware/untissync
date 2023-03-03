@@ -29,16 +29,10 @@ this name from the source code of the WebUntis login page (search for _mandantNa
 __For the purpose of testing or developing you can create a playground in WebUntis! Make sure you do not use unnecessary polling on the WebUntis production API!__
 
 ###  Configuration of EGroupware
-1. Add untissync app to EGroupware docker container 
-(see also https://github.com/EGroupware/egroupware/wiki/Installation-using-egroupware-docker-RPM-DEB-package#how-to-install-egroupware-gmbhs-epl-version):
-* mkdir -p /usr/share/egroupware (if it does not yet exist!)
-* cd /usr/share/egroupware
-* git clone EGroupware/untissync 
-* docker restart egroupware (to restart the docker container)
-2. Install UntisSync from the EGroupware setup. Configure run rights for the UntisSync application.
-3. Create a new (technical) user `untissync` who will later become the owner of the calendar entries. Login via this user will not be necessary.
+1. Install UntisSync from the EGroupware setup. Configure runtime permissions for the UntisSync application.
+2. Create a new (technical) user `untissync` who will later become the owner of the calendar entries. Login via this user will not be necessary.
 This step makes it easier to troubleshoot any errors that may occur due to incorrect synchronization.
-4. Open the site configuration of UntisSync and complete your settings:
+3. Open the site configuration of UntisSync and complete your settings:
 
 | name           	| value                                                 	                                                                                                                                                                                                      |
 |---------------------	|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -67,6 +61,8 @@ This step makes it easier to troubleshoot any errors that may occur due to incor
 | Prefix of the EGroupware group of teaching teachers per class (default: Lehrer_)  | _The given prefix enables the automatic linking of the classes from WebUntis with his teacher group from EGroupware._                                                                                                                                        |
 |                       |                                                                                                                                                                                                                                                              |
 | Load rooms and classes from Webuntis before importing  | _Activate the checkbox if you want the classes and rooms to be updated by WebUntis before each synchronization._                                                                                                                                             |
+|                       |                                                                                                                                                                                                                                                              |
+ | Delete orphaned entries | _Activate the checkbox if you want the clean up orphaned calender events after timetable import (e.g. after incorrect synchronization)._                                                                                                                     |
 
 ### Initial data import
 This step is necessary if calendar entries are to be updated in EGroupware. From the sidebar in UntisSync you can open the mapping tools for teachers, classes and rooms.

@@ -99,10 +99,6 @@ class UntissyncApp extends EgwApp
 					{
 						console.log(_val,_resp);
 					}
-					else
-					{
-
-					}
 				}, msg1, 'import timetables', menuaction, indices, 'untissync');
 			}
 		};

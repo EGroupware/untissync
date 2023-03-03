@@ -393,7 +393,7 @@ class untissync_bo {
         if(is_countable($result)){
             foreach ($result as $tt){
                 // delete participants
-                $this->so_participant->deleteAllParticipants($tt['id'], 'tt');
+                $this->so_participant->deleteAllParticipants($tt['tt_id'], 'tt');
                 if($tt['tt_egw_cal_id']) {
                     // delete egroupware cal event
                     $this->so_calendar->delete($tt['tt_egw_cal_id']);
