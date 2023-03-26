@@ -234,7 +234,7 @@ class untissync_ui
 	 */
 	function list($content='')
 	{
-	    $config = untissync_config::read();
+        $config = untissync_config::read();
 	    $sel_options = array();
 	    $preserv = array();
 	    $msg = '';
@@ -459,12 +459,7 @@ class untissync_ui
     public function ajax_importSubstitutions(){
         $msg = '';
         $result = $this->bo->importSubstitutions();
-        if($result == 1) {
-            $msg = $msg . $result . " Vertretungsplan wurde importiert!";
-        }
-        else{
-            $msg = $msg . $result . " Vertretungspläne wurden importiert!";
-        }
+        $msg = $msg . " Vertretungspläne (" . $result . ") wurden importiert!";
 
         $this->bo->requestLastImportTime($msg);
         $config = untissync_config::read();

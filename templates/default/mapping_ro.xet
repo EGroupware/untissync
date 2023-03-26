@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2//EN" "http://www.egroupware.org/etemplate2.dtd">
-<!-- $Id$ -->
-<overlay>	
-	
-	<template id="untissync.mapping_ro.table" template="" lang="" group="0" version="16.1">
+<!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2.0//EN" "https://www.egroupware.org/etemplate2.0.dtd">
+<overlay>
+	<template id="untissync.mapping_ro.table" template="" lang="" group="0" version="23.1">
 		<grid id="nm_te">
 			<columns>
-				<column width="5%"/>
-				<column width="20%"/>
-				<column width="20%"/>
-				<column width="20%"/>
+				<column width="5%"></column>
+				<column width="20%"></column>
+				<column width="20%"></column>
+				<column width="20%"></column>
 			</columns>
 			<rows>
 				<row class="th">
-					<nextmatch-header id="id" label=""/>					
-					<nextmatch-sortheader id="longname" label="untis_fullname"/>
-					<nextmatch-sortheader id="name" label="untis_name"/>
-					<nextmatch-sortheader id="EGW User" label="egw_ressource"/>
+					<nextmatch-header id="id" label=""></nextmatch-header>
+					<nextmatch-sortheader id="longname" label="untis_fullname"></nextmatch-sortheader>
+					<nextmatch-sortheader id="name" label="untis_name"></nextmatch-sortheader>
+					<nextmatch-sortheader id="EGW User" label="egw_ressource"></nextmatch-sortheader>
 				</row>
 				<row>
-					<description id="${row}[nr]" no_lang="1"/>					
-					<description id="${row}[longname]" no_lang="1"/>
-					<description id="${row}[name]" no_lang="1"/>
-					<description id="${row}[egw_name]" no_lang="1"/>																			
+					<et2-description id="${row}[nr]" no_lang="1"></et2-description>
+					<et2-description id="${row}[longname]" no_lang="1"></et2-description>
+					<et2-description id="${row}[name]" no_lang="1"></et2-description>
+					<et2-description id="${row}[egw_name]" no_lang="1"></et2-description>
 				</row>				
 			</rows>
 		</grid>
-	</template>	
-	
-	<template id="untissync.mapping_ro.header_right" template="" lang="" group="0" version="0.0.001">
-		<button  statustext="import" label="import" id="button[update]" background_image="1"/>
-		<button  statustext="truncate" label="truncate" id="button[truncate]" background_image="1"/>
 	</template>
-	
-	<template id="untissync.mapping_ro" template="" lang="" group="0" version="16.1">
-		<box id="showromapmodal" class="modalbg" >
-			<vbox id="showromapcontent" width="50%">
-				<template id="untissync.mapping_ro_edit"/>
-			</vbox>
+	<template id="untissync.mapping_ro.header_right" template="" lang="" group="0" version="23.1">
+		<et2-button statustext="import" label="import" id="button[update]" background_image="1"></et2-button>
+		<et2-button statustext="truncate" label="truncate" id="button[truncate]" background_image="1"></et2-button>
+	</template>
+	<template id="untissync.mapping_ro" template="" lang="" group="0" version="23.1">
+		<box id="showromapmodal" class="modalbg">
+			<et2-vbox id="showromapcontent" width="50%">
+				<template id="untissync.mapping_ro_edit"></template>
+			</et2-vbox>
 		</box>
-		<nextmatch id="nm" no_lang="1" template="untissync.mapping_ro.table" header_right="untissync.mapping_ro.header_right"/>
+		<et2-hbox>
+			<et2-button statustext="import" label="import" id="button[update]" background_image="1" image="update"></et2-button>
+			<et2-button statustext="truncate" label="truncate" id="button[truncate]" background_image="1" image="delete"></et2-button>
+		</et2-hbox>
+		<nextmatch id="nm" no_lang="1" template="untissync.mapping_ro.table" header_right="untissync.mapping_ro.header_right"></nextmatch>
 	</template>
 </overlay>
