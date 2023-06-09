@@ -7,10 +7,7 @@
  * @copyright (c) 2020 by Axel Wild
  * @license http://opensource.org/licenses/gpl-license.php GPL - GNU General Public License
  */
-/*import {EgwApp} from '../../api/js/jsapi/egw_app';
-import {et2_nextmatch} from "../../api/js/etemplate/et2_extension_nextmatch";
-import {etemplate2} from "../../api/js/etemplate/etemplate2";
-*/
+import { EgwApp } from '../../api/js/jsapi/egw_app';
 /**
  * UI for untissync
  *

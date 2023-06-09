@@ -27,4 +27,3 @@ if ($ts_version != $GLOBALS['egw_info']['apps']['untissync']['version'])
 }
 
 Framework::redirect_link('/index.php',array('menuaction'=>'untissync.untissync_ui.list'));
-

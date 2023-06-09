@@ -30,7 +30,7 @@
 					<et2-hbox>
 						<et2-description id="webuntis_user"></et2-description>
 						<et2-button disabled="!@admin" statustext="Test" label="Test" id="button[test]" image="" background_image="false" onclick="app.untissync.test_connection"></et2-button>
-						<et2-image src="success.png" id="test_connection_success" disabled="true"></et2-image><image src="failed.png" id="test_connection_failed" disabled="true"></image>
+						<et2-image src="success" id="test_connection_success" disabled="true"></et2-image><image src="failed" id="test_connection_failed" disabled="true"></image>
 					</et2-hbox>
 				</row>	
 				<row>
