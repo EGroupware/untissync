@@ -1,37 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2//EN" "http://www.egroupware.org/etemplate2.dtd">
-<!-- $Id$ -->
+<!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2.0//EN" "https://www.egroupware.org/etemplate2.0.dtd">
 <overlay>	
-	<template id="untissync.mapping_ro_edit" template="" lang="" group="0" version="16.1">
-		<description label="link_untis_room"/>
-
+	<template id="untissync.mapping_ro_edit" template="" lang="" group="0" version="23.1">
+		<et2-description label="link_untis_room"></et2-description>
 		<grid>
 			<columns>
-				<column width="5%"/>
-				<column width="20%"/>
-				<column width="20%"/>
-				<column width="20%"/>
+				<column width="5%"></column>
+				<column width="20%"></column>
+				<column width="20%"></column>
+				<column width="30%"></column>
 			</columns>
 			<rows>
 				<row class="th">
-					<description label=""/>					
-					<description label="untis_fullname"/>
-					<description label="untis_name"/>
-					<description label="egw_ressource"/>
+					<et2-description label=""></et2-description>
+					<et2-description label="untis_fullname"></et2-description>
+					<et2-description label="untis_name"></et2-description>
+					<et2-description label="egw_ressource"></et2-description>
 				</row>
 				<row>
-					<description id="nr" no_lang="1"/>					
-					<description id="longname" no_lang="1"/>
-					<description id="name" no_lang="1"/>
-					<hbox>
-						<menulist class="et2_fullWidth">
-							<menupopup type="select" statustext="Raum" id="rooms" multiple="false" search="true" no_lang="true"/>
-						</menulist>
-					</hbox>										
+					<et2-description id="nr" no_lang="1"></et2-description>
+					<et2-description id="longname" no_lang="1"></et2-description>
+					<et2-description id="name" no_lang="1"></et2-description>
+					<et2-select statustext="Raum" id="rooms" multiple="false" search="true" no_lang="true"></et2-select>
 				</row>				
 			</rows>
 		</grid>
-		<button label="Ok" tabindex="6" id="button[ok]" class="button_ok" onclick="app.untissync.onRoomMappingCommit" image="check" background_image="true"/>
-		<button label="Cancel" tabindex="6" id="button[cancel]" class="button_cancel" onclick="app.untissync.onRoomMappingCancel" image="cancel" background_image="true"/>
+		<et2-button label="Ok" tabindex="6" id="button[ok]" class="button_ok" onclick="app.untissync.onRoomMappingCommit" image="check" background_image="true"></et2-button>
+		<et2-button label="Cancel" tabindex="6" id="button[cancel]" class="button_cancel" onclick="app.untissync.onRoomMappingCancel" image="cancel" background_image="true"></et2-button>
 	</template>
 </overlay>

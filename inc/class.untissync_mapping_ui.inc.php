@@ -157,25 +157,28 @@ class untissync_mapping_ui
 		
 		if (is_array($content))
 		{
-            if(is_array($content['nm']['button'])) {
-                $button = key($content['nm']['button']);
-                unset($content['nm']['button']);
-                if ($button) {
-                    if ($button == 'update') {
+            if(is_array($content['button'])) {
+                //$button = keys($content['nm']['button']);
+                $button = @key($content['button']);
+                unset($content['button']);
+                switch($button)
+                {
+                    case 'update':
                         $result = $this->bo->updateTeachers($msg);
                         if ($result) {
                             $msg = $msg . PHP_EOL . "Update succeeded!";
                         } else {
                             $msg = $msg . PHP_EOL . "Update failed!";
                         }
-                    } elseif ($button == 'truncate') {
+                        break;
+                    case 'truncate':
                         $result = $this->bo->truncateTeachers();
                         if ($result) {
                             $msg = "Deleted successfully!";
                         } else {
                             $msg = "Could not be deleted successfully!";
                         }
-                    }
+                        break;
                 }
             }
 		    
@@ -387,14 +390,6 @@ class untissync_mapping_ui
             'longname' => $rows[$rowid]['longname'],
             'name' => $rows[$rowid]['name'],
         );
-
-        // list rooms
-        $result['rooms'] = array();
-        $rooms = $this->bo->getAvailableRooms();
-        foreach($rooms as $key => $value){
-            $result['rooms'][$key] = $value['name'];
-        }
-
         Api\Json\Response::get()->data($result);
     }
     public function ajax_onRoomMappingCommit($ro_egw_uid){
@@ -496,28 +491,31 @@ class untissync_mapping_ui
 	    $preserv = array();
 	    
 	    if ($_GET['msg']) $msg = $_GET['msg'];
-	    
-	    if (is_array($content))
-	    {
-            if(is_array($content['nm']['button'])) {
-                $button = key($content['nm']['button']);
-                unset($content['nm']['button']);
-                if ($button) {
-                    if ($button == 'update') {
+
+        if (is_array($content))
+        {
+            if(is_array($content['button'])) {
+                //$button = keys($content['nm']['button']);
+                $button = @key($content['button']);
+                unset($content['button']);
+                switch($button)
+                {
+                    case 'update':
                         $result = $this->bo->updateRooms();
                         if ($result) {
                             $msg = "Update succeeded!";
                         } else {
                             $msg = "Update failed!";
                         }
-                    } elseif ($button == 'truncate') {
+                        break;
+                    case 'truncate':
                         $result = $this->bo->truncateRooms();
                         if ($result) {
                             $msg = "Deleted successfully!";
                         } else {
                             $msg = "Could not be deleted successfully!";
                         }
-                    }
+                        break;
                 }
             }
 	        
@@ -581,7 +579,14 @@ class untissync_mapping_ui
 	        'button[update]'     => false,
 	        'button[truncate]'     => false,
 	    );
-	    
+
+        $sel_options['rooms'] = array();
+        $rooms = $this->bo->getAvailableRooms();
+
+        foreach($rooms as $key => $value){
+            $sel_options['rooms'][$key] = $value['name'].' ('.$value['short_description'].')';
+        }
+
 	    $preserv = $sel_options;
 	    
 	    $etpl->read('untissync.mapping_ro');
@@ -699,29 +704,31 @@ class untissync_mapping_ui
 	    $preserv = array();
 	    
 	    if ($_GET['msg']) $msg = $_GET['msg'];
-	    if ($_GET['nm_id']) $nm_id = $_GET['nm_id'];
-	    
-	    if (is_array($content))
+
+        if (is_array($content))
 	    {
-            if(is_array($content['nm']['button'])) {
-                $button = key($content['nm']['button']);
-                unset($content['nm']['button']);
-                if ($button) {
-                    if ($button == 'update') {
+            if(is_array($content['button'])) {
+                //$button = keys($content['nm']['button']);
+                $button = @key($content['button']);
+                unset($content['button']);
+                switch($button)
+                {
+                    case 'update':
                         $result = $this->bo->updateClasses();
                         if ($result) {
                             $msg = "Update succeeded!";
                         } else {
                             $msg = "Update failed!";
                         }
-                    } elseif ($button == 'truncate') {
+                        break;
+                    case 'truncate':
                         $result = $this->bo->truncateClasses();
                         if ($result) {
                             $msg = "Deleted successfully!";
                         } else {
                             $msg = "Could not be deleted successfully!";
                         }
-                    }
+                        break;
                 }
             }
 	        
