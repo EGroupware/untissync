@@ -163,6 +163,13 @@ class untissync_bo {
         }
 
 	    // update timetables from untis and egw calendar
+        if(!$startDate){
+            $startDate = new DateTime();
+        }
+        if(!$endDate){
+            $endDate = new DateTime();
+            $endDate = $endDate->modify("+$update_timetable_days day");
+        }
 	    $this->updateTeacherTimetable($startDate->format('Ymd'), $endDate->format('Ymd'), $teacherUntisIDs);
 	    
 	    $this->debug_log->log(" startDate: ".$startDate->format('Ymd')."; endDate: ".$endDate->format('Ymd'), __METHOD__);
