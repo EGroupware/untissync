@@ -15,7 +15,8 @@ webuntis_pswd	untissync	de	WebUntis Passwort
 cal_event_owner	untissync	de	Besitzer der Kalendertermine
 import_timetable_days	untissync	de	Anzahl der Tage ein, für die der Stundenplan im Voraus geladen werden soll.
 cal_integration	untissync	de	Stundenplan in den Kalender integrieren
-delete_expired_events	untissync	de	Abgelaufene Kalendereinträge wieder entfernen.
+delete_expired_events	untissync	de	Abgelaufene Kalendereinträge wieder entfernen (veraltet).
+delete_expired_events_days	untissync	de	Anzahl der Tage, nach dem ein abgelaufener Kalendereintrag entfernt wird.
 prefix_class_user	untissync	de	Prefix der EGroupwarebenutzer, die Klassen repräsentieren (default: Klasse_)
 update_classgroup_members	untissync	de	EGroupwaregruppe der unterrichtenden Lehrer pro Klasse nach dem Import aktualisieren
 prefix_teachergroup	untissync	de	Prefix der EGroupwaregruppe, die Lehrergruppe repräsentieren (default: Lehrer_)
