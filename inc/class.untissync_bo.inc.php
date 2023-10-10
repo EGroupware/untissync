@@ -607,7 +607,7 @@ class untissync_bo {
             $te_uid = $val['te_uid'];
 	        $this->debug_log->log("Import teacher timetable for  teacher untis id:".$te_uid, __METHOD__);
 	        
-	        // mark tt events as unclean
+	        // mark tt events as unclean, ignore events of the past n days , if delete_expired_events_days > 0
 	        $this->so_timetable->markUnClean($te_uid);
 	        // import
 	        $ttevents = $this->importSingleTeacherTimetable($startDate, $endDate, $te_uid);
@@ -1201,6 +1201,7 @@ class untissync_bo {
 	    $te = array();
 	    $ro = array();
 	    $kl = array();
+        $su = array();
 		// read egw id for every participant
 		if(is_array($parts)){
 			foreach ($parts as &$part) {
@@ -1242,7 +1243,7 @@ class untissync_bo {
      * @param array $te
      * @param array $ro
      * @param array $kl
-     * @param string $su
+     * @param array $su
      * @return array|bool|int|mixed|void
      * @throws Api\Exception
      */
@@ -1313,10 +1314,10 @@ class untissync_bo {
 	 * @param array $te
 	 * @param array $ro
 	 * @param array $kl
-	 * @param string $su
+	 * @param array $su
 	 * @return string|unknown
 	 */
-	private function createEventTitle($ttevent, array $te, array $ro, array $kl, $su = ''){
+	private function createEventTitle($ttevent, array $te, array $ro, array $kl, array $su){
 	    // get name of lesson
 	    $date_Ymd = $ttevent['tt_date'];
 	    $starttime = $ttevent['tt_starttime'];
@@ -1576,6 +1577,7 @@ class untissync_bo {
 	private function cleanUpTimetableEvents($teacherUntisID){
 	    $config = untissync_config::read();
         $delOldEgwEvents = ($config['cleanup_cal_events'] == 1);         // delete egw cal events in the past?
+        $delOldEgwEventsDays = $config['cleanup_cal_events_days'];
         $todayYMD = (new DateTime())->format('Ymd');
 
 	    $tt_events = $this->so_timetable->searchUnClean($teacherUntisID);
@@ -1583,6 +1585,9 @@ class untissync_bo {
 	    if(is_array($tt_events)){
     	    foreach($tt_events as &$tt_event){
     	        $cal_egw_id = $tt_event['tt_egw_cal_id'];
+
+                // keep events of the last n [delOldEgwEventsDays] days, if $delOldEgwEvents=true and delOldEgwEventsDays > 0
+
 
                 if($tt_event['count_te_parts'] <= 1){
                     // delete event, this teacher was the last teacher participant
@@ -1598,7 +1603,7 @@ class untissync_bo {
                     // update event, there are more teacher participants
                     // delete single participant
                     $this->so_participant->delete($tt_event['pa_id']);
-                    // remove participant and and update event
+                    // remove participant and update event
                     $egw_teacher = $this->so_teacher->getTeacherByUntisID($teacherUntisID);
                     $cal_event = $this->so_calendar->read($tt_event['tt_egw_cal_id']);
                     unset($cal_event[$tt_event['tt_egw_cal_id']]['participants'][$egw_teacher['te_egw_uid']]);

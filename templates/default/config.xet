@@ -49,7 +49,11 @@
 				<row>
 					<et2-description value="delete_expired_events"></et2-description>
 					<et2-checkbox id="newsettings[cleanup_cal_events]"></et2-checkbox>
-				</row>				
+				</row>
+				<row>
+					<et2-description value="delete_expired_events_days"></et2-description>
+					<et2-number id="newsettings[cleanup_cal_events_days]" precision="0" min="0" max="365" width="30%"></et2-number>
+				</row>
 				<row>
 					<et2-description value="prefix_class_user"></et2-description>
 					<et2-textbox id="newsettings[webuntis_mapping_prefix_class]" maxlength="20" width="30%"></et2-textbox>

@@ -121,7 +121,7 @@ class untissync_timetable_so extends Api\Storage {
             if(parent::save() != 0) return false;     
             
             $filter = array(
-                'tt_uid' => $tt_uid,            
+                'tt_uid' => $tt_uid,
             );
                     
             $result = $this->read($filter);
@@ -224,10 +224,17 @@ class untissync_timetable_so extends Api\Storage {
      * @return mixed
      */
     public function markUnClean($teacherUntisID){
+        $config = untissync_config::read();
+        $delOldEgwEventsDays =  $config['cleanup_cal_events_days'] ? $config['cleanup_cal_events_days'] : 0;
+        $todayYMD = (new DateTime())->format('Ymd');
+        $pastYMD = (new DateTime())->modify("-".$config['cleanup_cal_events_days']." day")->format('Ymd');
+
         $updateSQL = "UPDATE egw_untissync_timetable, egw_untissync_participant "
                     ."SET egw_untissync_timetable.tt_clean = -1 "
                     ."WHERE egw_untissync_timetable.tt_id = egw_untissync_participant.pa_parentid "
-                    ."AND egw_untissync_participant.pa_parenttable = 'tt' AND egw_untissync_participant.pa_parttype = 'te' AND egw_untissync_participant.pa_partid = $teacherUntisID";
+                    ."AND egw_untissync_participant.pa_parenttable = 'tt' AND egw_untissync_participant.pa_parttype = 'te' "
+                    ."AND egw_untissync_participant.pa_partid = $teacherUntisID "
+                    ."AND (egw_untissync_timetable.tt_date < $pastYMD OR egw_untissync_timetable.tt_date >= $todayYMD)";
 
         return $this->db->query($updateSQL);
     }

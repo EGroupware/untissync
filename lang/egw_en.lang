@@ -15,7 +15,8 @@ webuntis_pswd	untissync	en	WebUntis password
 cal_event_owner	untissync	en	Owner of calendar events
 import_timetable_days	untissync	en	Number of days for which the timetable should be loaded in advance
 cal_integration	untissync	en	Integrate the timetable in the calendar
-delete_expired_events	untissync	en	Remove expired calendar entries
+delete_expired_events	untissync	en	Remove expired calendar entries (deprecated).
+delete_expired_events_days	untissync	en	Number of days after which an expired calendar entry is removed.
 prefix_class_user	untissync	en	Prefix of the EGroupware user, representing a class (default: Klasse_)
 update_classgroup_members	untissync	en	Update EGroupware group of teaching teachers per class after import
 prefix_teachergroup	untissync	en	Prefix of the EGroupware group of teaching teachers per class (default: Lehrer_)
