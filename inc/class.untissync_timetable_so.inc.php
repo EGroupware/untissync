@@ -225,9 +225,9 @@ class untissync_timetable_so extends Api\Storage {
      */
     public function markUnClean($teacherUntisID){
         $config = untissync_config::read();
-        $delOldEgwEventsDays =  $config['cleanup_cal_events_days'] ? $config['cleanup_cal_events_days'] : 0;
+        $delOldEgwEventsDays =  $config['cleanup_cal_events_days'] ?: 0;
         $todayYMD = (new DateTime())->format('Ymd');
-        $pastYMD = (new DateTime())->modify("-".$config['cleanup_cal_events_days']." day")->format('Ymd');
+        $pastYMD = (new DateTime())->modify("-".$delOldEgwEventsDays." day")->format('Ymd');
 
         $updateSQL = "UPDATE egw_untissync_timetable, egw_untissync_participant "
                     ."SET egw_untissync_timetable.tt_clean = -1 "
