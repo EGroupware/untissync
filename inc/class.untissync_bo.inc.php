@@ -1472,10 +1472,12 @@ class untissync_bo {
 
 	/**
 	 * get webuntis school from config
+     * performs urlencoding if the character % is not included
 	 */
 	public function getSchool(){
 	    $config = untissync_config::read();
-		return $config['webuntis_school'];
+        $result = $config['webuntis_school'];
+        return strpos($result, "%") === false ? urlencode($result) : $result;
 	}
 
     /**
@@ -1577,7 +1579,6 @@ class untissync_bo {
 	private function cleanUpTimetableEvents($teacherUntisID){
 	    $config = untissync_config::read();
         $delOldEgwEvents = ($config['cleanup_cal_events'] == 1);         // delete egw cal events in the past?
-        $delOldEgwEventsDays = $config['cleanup_cal_events_days'];
         $todayYMD = (new DateTime())->format('Ymd');
 
 	    $tt_events = $this->so_timetable->searchUnClean($teacherUntisID);
@@ -1585,9 +1586,6 @@ class untissync_bo {
 	    if(is_array($tt_events)){
     	    foreach($tt_events as &$tt_event){
     	        $cal_egw_id = $tt_event['tt_egw_cal_id'];
-
-                // keep events of the last n [delOldEgwEventsDays] days, if $delOldEgwEvents=true and delOldEgwEventsDays > 0
-
 
                 if($tt_event['count_te_parts'] <= 1){
                     // delete event, this teacher was the last teacher participant
