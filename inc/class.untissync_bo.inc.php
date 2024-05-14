@@ -593,7 +593,6 @@ class untissync_bo {
 	 * @param unknown $startDate
 	 * @param unknown $endDate
 	 * @param array $teacherUntisID
-	 * @return string|mixed
 	 */
 	public function updateTeacherTimetable($startDate, $endDate, array $teacherIDs)
 	{
@@ -609,15 +608,13 @@ class untissync_bo {
 	        
 	        // mark tt events as unclean, ignore events of the past n days , if delete_expired_events_days > 0
 	        $this->so_timetable->markUnClean($te_uid);
-	        // import
+	        // import events, return array with modified events
 	        $ttevents = $this->importSingleTeacherTimetable($startDate, $endDate, $te_uid);
 	        
 	        if(is_array($ttevents)){
 	            foreach($ttevents as $tt){
-	                // update a single event (if not cancelled), incl. set flag for clean up
-                    if($tt['tt_code'] != 'cancelled'){
-                        $this->updateSingleCalItem($tt);
-                    }
+	                // update a single event, incl. set flag for clean up
+                    $this->updateSingleCalItem($tt);
 	            }
 	        }
 	        
@@ -677,7 +674,6 @@ class untissync_bo {
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK
-	                
 	                break;
 	            default:
 	                echo 'unexpected HTTP-Code: ', $http_code, "\n";
@@ -688,7 +684,8 @@ class untissync_bo {
 	    
 	    if(is_array($result)){	        	   
     	    foreach ($result['result'] as &$val) {
-    	        $tt = $this->so_timetable->write($val['id'], $object_id, $val['date'], $val['startTime'], $val['endTime'], $val['lstype'], $val['code'], $val['lstext'], $val['statsflags'], $val['activityType'], $val['kl'], $val['te'], $val['ro'], $val['su']);
+    	        //$tt = $this->so_timetable->write($val['id'], $object_id, $val['date'], $val['startTime'], $val['endTime'], $val['lstype'], $val['code'], $val['lstext'], $val['statsflags'], $val['activityType'], $val['kl'], $val['te'], $val['ro'], $val['su']);
+                $tt = $this->so_timetable->write($val, $object_id);
     	        if(is_array($tt)){
     	            $ttevents[] = $tt;
     	        }
@@ -1191,7 +1188,7 @@ class untissync_bo {
 	}
 	
 	/**
-	 * updates a single egw calendar event
+	 * updates a single egw calendar event, if event.code == 'cancelled and event exists, delete event
 	 * @param array $tt
 	 */
 	private function updateSingleCalItem($tt){
@@ -1238,7 +1235,7 @@ class untissync_bo {
 	}
 
     /**
-     * creates or updates a single egw calendar event
+     * create, delete or update a single egw calendar event
      * @param $ttevent
      * @param array $te
      * @param array $ro
@@ -1301,9 +1298,21 @@ class untissync_bo {
 	    // Teilnehmer und Raum hinzuf�gen
 		$this->createParticipantsInfo($event, $te, $kl, $ro);
 		$msg = "";
-		$calid = $this->bo_calendar_update->update($event, true, true, true, true, $msg, "NOPUSH"); // true for ignore_conflicts, update modifier, ignore acl
 
-	    $this->so_timetable->updateEgwCalendarEventID($ttevent, $calid); // update id an timestamp
+        $calid = -1;
+        if($ttevent['tt_code'] == 'cancelled') {
+            // timetable-event has been cancelled
+            if($ttevent["tt_egw_cal_id"] > 0) {
+                $this->bo_calendar_update->delete($ttevent["tt_egw_cal_id"], 0, true);
+                $this->so_timetable->updateEgwCalendarEventID($ttevent, $calid); // update id an timestamp
+            }
+        }
+        else{
+            $calid = $this->bo_calendar_update->update($event, true, true, true, true, $msg, "NOPUSH"); // true for ignore_conflicts, update modifier, ignore acl
+            $this->so_timetable->updateEgwCalendarEventID($ttevent, $calid); // update id an timestamp
+        }
+
+
 	    
 	    return $calid;
 	}
@@ -1572,7 +1581,7 @@ class untissync_bo {
 	}
 	
 	/**
-	 * clean up all all timetable items: participants, egroupware calendar event, timttable itself for the teacher with the given untis id 
+	 * clean up all timetable items: participants, egroupware calendar event, timttable itself for the teacher with the given untis id
 	 * this is called, when substitutions has been changed
 	 * @param unknown $teacherUnitsID
 	 */

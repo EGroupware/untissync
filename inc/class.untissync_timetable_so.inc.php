@@ -19,6 +19,8 @@ class untissync_timetable_so extends Api\Storage {
     var $untissync_timetable_table = 'egw_untissync_timetable';
     
     var $value_col = array();
+    /** @var array check if cols has been modified */
+    var $check_modification_cols = array();
     
     var $participant_so;
     
@@ -44,9 +46,18 @@ class untissync_timetable_so extends Api\Storage {
         $this->value_col['code'] = 'tt_code';
         $this->value_col['lstext'] = 'tt_lstext';
         $this->value_col['statsflags'] = 'tt_statsflags';
-        $this->value_col['atcivitytype'] = 'tt_activitytype';
+        $this->value_col['activitytype'] = 'tt_activitytype';
         $this->value_col['created'] = 'tt_created';
-        $this->value_col['modified'] = 'tt_modified';       
+        $this->value_col['modified'] = 'tt_modified';
+
+        $this->check_modification_cols[] = 'tt_date';
+        $this->check_modification_cols[] = 'tt_starttime';
+        $this->check_modification_cols[] = 'tt_endtime';
+        $this->check_modification_cols[] = 'tt_lstype';
+        $this->check_modification_cols[] = 'tt_code';
+        $this->check_modification_cols[] = 'tt_lstext';
+        $this->check_modification_cols[] = 'tt_statsflags';
+        $this->check_modification_cols[] = 'tt_activitytype';
         
         $this->customfields = Storage\Customfields::get($app, false, null, $db);
     }
@@ -68,26 +79,28 @@ class untissync_timetable_so extends Api\Storage {
      * @param unknown $tt_su
      * @return boolean  false if nothing has to be uodated in egw calendar, timetable event else
      */
-    function write($tt_uid, $tt_teuid, $tt_date, $tt_starttime, $tt_endtime, $tt_lstype, $tt_code, $tt_lstext, $tt_statsflags, $tt_activitytype, $tt_kl, $tt_te, $tt_ro, $tt_su){
+    // $tt = $this->so_timetable->write($val['id'], $object_id, $val['date'], $val['startTime'], $val['endTime'], $val['lstype'], $val['code'], $val['lstext'], $val['statsflags'], $val['activityType'], $val['kl'], $val['te'], $val['ro'], $val['su']);
+    //function write($tt_uid, $tt_teuid, $tt_date, $tt_starttime, $tt_endtime, $tt_lstype, $tt_code, $tt_lstext, $tt_statsflags, $tt_activitytype, $tt_kl, $tt_te, $tt_ro, $tt_su){
+    function write($tt_event, $object_id){
         $time = time();
         $key_col = "";
         
         $timetable = array(
-            'tt_uid' => $tt_uid,   
-            'tt_teuid' => $tt_teuid,   
-            'tt_date' => $tt_date,
-            'tt_starttime' => $tt_starttime,
-            'tt_endtime' => $tt_endtime,
-            'tt_lstype' => $tt_lstype,
-            'tt_code' => $tt_code,
-            'tt_lstext' => $tt_lstext,
-            'tt_statsflags' => $tt_statsflags,
-            'tt_activitytype' => $tt_activitytype,
+            'tt_uid' => $tt_event['id'],
+            'tt_teuid' => $object_id,
+            'tt_date' => $tt_event['date'],
+            'tt_starttime' => $tt_event['startTime'],
+            'tt_endtime' => $tt_event['endTime'],
+            'tt_lstype' => $tt_event['lstype'] ?? "",
+            'tt_code' => $tt_event['code'] ?? "",
+            'tt_lstext' => $tt_event['tstext'] ?? "",
+            'tt_statsflags' => $tt_event['statsflags'] ?? "",
+            'tt_activitytype' => $tt_event['activityType'] ?? "",
             'tt_modified' => $time,
         );
         
         $filter = array(
-            'tt_uid' => $tt_uid,           
+            'tt_uid' => $tt_event['id']
         );
         
         $result = $this->read($filter);
@@ -96,7 +109,7 @@ class untissync_timetable_so extends Api\Storage {
             // timetable exists in DB
             $updateFields = array();
             $updateFields['tt_modified'] = $time;
-            if($this->equals($timetable, $result, $tt_kl, $tt_te, $tt_ro, $tt_su)){
+            if($this->equals($timetable, $result, $tt_event['kl'], $tt_event['te'], $tt_event['ro'], $tt_event['su'])){
                 // substitution not modified
                 $updateFields['tt_clean'] = 1; 
                 if(parent::update($updateFields) != 0) return false;
@@ -104,9 +117,14 @@ class untissync_timetable_so extends Api\Storage {
                 // finished - nothing to do anymore
             }
             else{
-                // v modified
+                // item has been modified
                 // delete participants
-                $updateFields['tt_clean'] = 0;                
+                $updateFields['tt_clean'] = 0;
+                foreach ($this->check_modification_cols as $v) {
+                    if($result[$v] != $timetable[$v]){
+                        $updateFields[$v] = $timetable[$v];
+                    }
+                }
                 $this->participant_so->deleteAllParticipants( $result['tt_id'], 'tt');
                 if(parent::update($updateFields) != 0) return false;
             }
@@ -121,7 +139,7 @@ class untissync_timetable_so extends Api\Storage {
             if(parent::save() != 0) return false;     
             
             $filter = array(
-                'tt_uid' => $tt_uid,
+                'tt_uid' => $tt_event['id'],
             );
                     
             $result = $this->read($filter);
@@ -133,20 +151,20 @@ class untissync_timetable_so extends Api\Storage {
             // delete all participants
             $this->participant_so->deleteAllParticipants($parent_id, 'tt');
             // klassen
-            foreach ($tt_kl as &$kl) {
+            foreach ($tt_event['kl'] as &$kl) {
                 // ($pa_parentid, $pa_parenttable, $pa_partid, $pa_parttype, $pa_partname, $pa_partorgid, $pa_partorgname){
                 $this->participant_so->write($parent_id, 'tt', $kl['id'], 'kl', $kl['name'], $kl['orgid'], $kl['orgname']);
             }
             // te
-            foreach ($tt_te as &$te) {
+            foreach ($tt_event['te'] as &$te) {
                 $this->participant_so->write($parent_id, 'tt', $te['id'], 'te', $te['name'], $te['orgid'], $te['orgname']);
             }
             // su
-            foreach ($tt_su as &$su) {
+            foreach ($tt_event['su'] as &$su) {
                 $this->participant_so->write($parent_id, 'tt', $su['id'], 'su', $su['name'], $su['orgid'], $su['orgname']);
             }
             // ro
-            foreach ($tt_ro as &$ro) {
+            foreach ($tt_event['ro'] as &$ro) {
                 $this->participant_so->write($parent_id, 'tt', $ro['id'], 'ro', $ro['name'], $ro['orgid'], $ro['orgname']);
             }
 
