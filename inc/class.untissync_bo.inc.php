@@ -519,11 +519,6 @@ class untissync_bo {
      * @return array of school years
      */
     private function getSchoolYears(){
-        if(!$this->authenticate($msg)){
-            $this->debug_log->log("not authenticated!");
-            return false;
-        }
-
         $url = $this->getURL();
 
         $data = array(
@@ -556,21 +551,8 @@ class untissync_bo {
         }
         $responseBody = $this->getJSONContent($response);
         curl_close($ch);
-        $this->logout();
         return $responseBody['result'];
     }
-
-    /*
-    public function updateSchoolYears(&$msg){
-        $schoolYears = $this->getSchoolYears($msg);
-
-        foreach($schoolYears as $key => $val) {
-            $this->so_schoolyears->write($val['id'], $val['name'], $val['startDate'], $val['endDate']);
-        }
-
-        return $schoolYears;
-    }
-    */
 	
 	/**
 	 * Limits two DateTime objects to current schoolyear
