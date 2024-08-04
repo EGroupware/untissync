@@ -95,7 +95,7 @@ class UntissyncApp extends EgwApp
 	}
 
 	/**
-	 * Import timetables via AJAX
+	 * test connection
 	 */
 	test_connection(){
 		let et2 = this.et2;

@@ -47,9 +47,7 @@ class untissync_bo {
     var $so_timegrid;
     var $so_timetable;
     var $so_participant;
-    
-    var $so_substitution;   
-    
+    var $so_substitution;
     var $so_resources;
     
     var $bo_calendar_update;
@@ -100,7 +98,7 @@ class untissync_bo {
      * @param false|array $teacherUntisIDs untis ids of teachers that need updating
      * @return int number of imported timetables
      */
-	public function importTimetable(&$msg, $teacherUntisIDs = false, $doLogin = true, $doLogout = true, $doImportTimeGrid = true, $doUpdClassGroups = true)
+	public function importTimetable(&$msg, $teacherUntisIDs = false, $doLogin = true, $doLogout = true, $doImportTimeGrid = true, $doUpdClassGroups = true, &$syName = '', &$eventsCount = 0)
 	{
 	    set_time_limit(2400);
 	    $this->debug_log->log(" set time limit: 2400 ", __METHOD__);
@@ -121,9 +119,22 @@ class untissync_bo {
             }
         }
 
-
-        // limit startdate and enddate by start and end of actual school year
-        $this->limitDates($startDate, $endDate);
+        // limit startdate and enddate by start and end of actual or next school year by first login
+        if($doLogin || empty(Api\Cache::getSession('untissync', 'activeSchoolYear'))){
+            $this->limitDates($startDate, $endDate, $syName);
+            $activeSchoolYear = array(
+                "startDate" => $startDate,
+                "endDate" => $endDate,
+                "name" => $syName,
+            );
+            Api\Cache::setSession('untissync', 'activeSchoolYear', $activeSchoolYear);
+        }
+        else{
+            $activeSchoolYear = Api\Cache::getSession('untissync', 'activeSchoolYear');
+            $startDate = $activeSchoolYear['startDate'];
+            $endDate = $activeSchoolYear['endDate'];
+            $syName = $activeSchoolYear['name'];
+        }
 
 	    if($teacherUntisIDs == False){
 	        // update all timetables
@@ -155,9 +166,8 @@ class untissync_bo {
         }
 
         if($doImportTimeGrid){
-            // import timegrid
-            $this->so_timegrid->truncate();
-            $this->importTimegrid();
+            // update timegrid
+            $this->updateTimegrid();
             $this->timegrid = $this->so_timegrid->getTimegridSet();
             //this->debug_log->log(" timegrid imported ", __METHOD__);
         }
@@ -170,12 +180,13 @@ class untissync_bo {
             $endDate = new DateTime();
             $endDate = $endDate->modify("+$update_timetable_days day");
         }
-	    $this->updateTeacherTimetable($startDate->format('Ymd'), $endDate->format('Ymd'), $teacherUntisIDs);
+	    $eventsCount = $this->updateTeacherTimetable($startDate->format('Ymd'), $endDate->format('Ymd'), $teacherUntisIDs);
 	    
 	    $this->debug_log->log(" startDate: ".$startDate->format('Ymd')."; endDate: ".$endDate->format('Ymd'), __METHOD__);
         if($doLogout){
             // LOGOUT
             $this->logout();
+            Api\Cache::unsetSession('untissync', 'activeSchoolYear');
         }
 
         if($doUpdClassGroups){
@@ -437,9 +448,10 @@ class untissync_bo {
      * Loads current school year
      * @param $start
      * @param $end
+     * @param $syName Name of school year
      * @return bool|string
      */
-	private function getCurrentSchoolYear(&$start, &$end){
+	private function getCurrentSchoolYear(&$start, &$end, &$syName){
 	    $url = $this->getURL();
 	    
 	    $data = array(
@@ -474,22 +486,107 @@ class untissync_bo {
 	    $jsonContent = $this->getJSONContent($response);
 	    $start = $jsonContent['result']['startDate'];
 	    $end = $jsonContent['result']['endDate'];
-	    
-	    
+        $syName = $jsonContent['result']['name'];
+
 	    curl_close($ch);
 	    return true;
 	}
+
+    /**
+     * Get next school year. This is usefull, if today is outside current school year because of holidays
+     * @param $start
+     * @param $end
+     * @param $syName
+     * @return void
+     */
+    private function getComingSchoolYear(&$start, &$end, &$syName){
+        $schoolYears = $this->getSchoolYears();
+        $today = intval(date("Ymd"));
+        $diffDays = 30000; // search only within the next 3 years
+        foreach($schoolYears as $key => $val) {
+            if($today < $val['startDate'] && ($val['startDate'] - $today < $diffDays)){
+                $start = $val['startDate'];
+                $end = $val['endDate'];
+                $syName = $val['name'];
+                $diffDays = $val['startDate'] - $today;
+            }
+        }
+    }
+
+
+    /**
+     * Load school years
+     * @return array of school years
+     */
+    private function getSchoolYears(){
+        if(!$this->authenticate($msg)){
+            $this->debug_log->log("not authenticated!");
+            return false;
+        }
+
+        $url = $this->getURL();
+
+        $data = array(
+            'id' => $this->post_id,
+            'method' => 'getSchoolyears',
+            'jsonrpc' => '2.0',
+        );
+
+        $ch = curl_init($url);
+        $json_payload = json_encode($data);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: text/plain;charset=UTF-8'
+        ));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_payload);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, COOKIEFILE);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, COOKIEFILE);
+        curl_setopt($ch, CURLOPT_HEADER, TRUE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+
+        // check HTTP status code
+        if (!curl_errno($ch)) {
+            switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
+                case 200:  # OK
+                    break;
+                default:
+                    return 'Unerwarter HTTP-Code: '. $http_code;
+            }
+        }
+        $responseBody = $this->getJSONContent($response);
+        curl_close($ch);
+        $this->logout();
+        return $responseBody['result'];
+    }
+
+    /*
+    public function updateSchoolYears(&$msg){
+        $schoolYears = $this->getSchoolYears($msg);
+
+        foreach($schoolYears as $key => $val) {
+            $this->so_schoolyears->write($val['id'], $val['name'], $val['startDate'], $val['endDate']);
+        }
+
+        return $schoolYears;
+    }
+    */
 	
 	/**
 	 * Limits two DateTime objects to current schoolyear
 	 * @param DateTime $startDate
 	 * @param DateTime $endDate
 	 */
-	private function limitDates(DateTime &$startDate, DateTime &$endDate){
-	    $start = '';
+	private function limitDates(DateTime &$startDate, DateTime &$endDate, &$syName){
+        $start = '';
 	    $end = '';
 	    
-	    $this->getCurrentSchoolYear($start, $end);
+	    $this->getCurrentSchoolYear($start, $end, $syName);
+        // get coming school year if current school year is null
+        if(empty($start)){
+            $this->getComingSchoolYear($start, $end, $syName);
+        }
+
 	    $startD = DateTime::createFromFormat('Ymd', $start);
 	    $endD = DateTime::createFromFormat('Ymd', $end);
 	    
@@ -600,6 +697,7 @@ class untissync_bo {
 
 	    $len = sizeof($teacherIDs);
 	    $counter = 0;
+        $eventsCount = 0;
         $so_teacher = new untissync_teacher_so();
 
 	    foreach($teacherIDs as $key => $val){
@@ -610,7 +708,7 @@ class untissync_bo {
 	        $this->so_timetable->markUnClean($te_uid);
 	        // import events, return array with modified events
 	        $ttevents = $this->importSingleTeacherTimetable($startDate, $endDate, $te_uid);
-	        
+            $eventsCount += count($ttevents);
 	        if(is_array($ttevents)){
 	            foreach($ttevents as $tt){
 	                // update a single event, incl. set flag for clean up
@@ -629,6 +727,7 @@ class untissync_bo {
 	        }
 	        $counter++;
 	    }
+        return $eventsCount;
 	}
 	
 	/**
@@ -1120,18 +1219,23 @@ class untissync_bo {
 	/**
 	 * called from ui
 	 */
-	public function startImportTimegrid(){
+	public function startImportTimegrid(&$msg){
 	    // authenticate
 	    $result = $this->authenticate($msg);
 	    if($result == false) return $result;
 	    
 	    // timegrid import
 	    // todo into loop, only reload once
-	    $this->so_timegrid-> truncate();
-	    $result = $this->importTimegrid();
+	    $result = $this->updateTimegrid();
 	    $this->timegrid = $this->so_timegrid->getTimegridSet();
-	    $this->debug_log->log(" timegrid imported ", __METHOD__);
+	    $this->debug_log->log(" timegrid updated ", __METHOD__);
 
+        if(empty($this->timegrid)){
+            $msg = $msg."Aktuelles Stundenraster ist leer!";
+        }
+        else{
+            $msg = $msg."Aktualisiertes Stundenraster mit ".count($this->timegrid)." Stunden importiert";
+        }
 	    // LOGOUT
 	    $this->logout();    	    	    
 	}
@@ -1139,7 +1243,7 @@ class untissync_bo {
 	/**
 	 * Get timegrid from webuntis server. 1 = sunday, 2 = monday, ..., 7 = saturday
 	 */
-	private function importTimegrid()
+	private function updateTimegrid()
 	{
 	    $url = $this->getURL();
 	    
@@ -1166,7 +1270,6 @@ class untissync_bo {
 	    if (!curl_errno($ch)) {
 	        switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
 	            case 200:  # OK
-	                
 	                break;
 	            default:
 	                echo 'Unerwarter HTTP-Code: ', $http_code, "\n";
@@ -1175,14 +1278,16 @@ class untissync_bo {
 	    }
 	    $result = $this->getJSONContent($response);
 
-	    foreach ($result['result'] as &$val) {
-	        $day = $val['day'];
-	        
-	        foreach($val['timeUnits'] as &$unit){
-	            $this->so_timegrid->write($day, $unit['name'], $unit['startTime'], $unit['endTime']);
-	            //$this->timegrid[$day.'-'.$unit['startTime'].'-'.$unit['endTime']] = $unit['name'];
-	        }	        
-	    }
+        if($result['result']){
+            // only possible between school year boundaries
+            $this->so_timegrid->truncate();
+            foreach ($result['result'] as &$val) {
+                $day = $val['day'];
+                foreach($val['timeUnits'] as &$unit){
+                    $this->so_timegrid->write($day, $unit['name'], $unit['startTime'], $unit['endTime']);
+                }
+            }
+        }
 	    curl_close($ch);
 	    return $response;
 	}
