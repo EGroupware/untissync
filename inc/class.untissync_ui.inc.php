@@ -76,7 +76,7 @@ class untissync_ui
 				if($button == 'update_timegrid')
 				{
 				    $content['exec_button'] = "update_substitutions";
-				    $result = $this->bo->startImportTimegrid();
+				    $result = $this->bo->startImportTimegrid($msg);
 				    $this->bo->requestLastImportTime($msg);
 				    $content['post_result'] = $result;
 				}
@@ -529,7 +529,6 @@ class untissync_ui
             $activeTeachers = Api\Cache::getSession('untissync', 'active_teachers');
         }
 
-
         if($index >= count($activeTeachers)){
             $msg = "Index out of bounds";
             return $response->data($msg);
@@ -545,9 +544,11 @@ class untissync_ui
             );
             $longname = $activeTeachers[$actualKey]['te_longname'];
 
-            $result = $this->bo->importTimetable($msg, $ids, $index == 0, $index == count($activeTeachers) -1 , $index == 0, $index == count($activeTeachers)-1);
+            $syName = '';
+            $eventsCount = 0;
+            $result = $this->bo->importTimetable($msg, $ids, $index == 0, $index == count($activeTeachers) -1 , $index == 0, $index == count($activeTeachers)-1, $syName, $eventsCount);
             $end = hrtime(true);
-            $msg = ($index + 1).'/'.count($activeTeachers).' '.$longname.' OK ('.number_format(($end - $start) / 1000000000, 2).' s)';
+            $msg = ($index + 1).'/'.count($activeTeachers).' '.$longname.' OK ('.number_format(($end - $start) / 1000000000, 2).' s, '.$syName.', '.$eventsCount.' Einträge)';
         }
         $response->data($msg);
     }

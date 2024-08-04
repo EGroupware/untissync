@@ -65,12 +65,14 @@ cleanup_cal_orphaned	untissync	en	delete orphaned calendar items
 delete_timetables	untissync	en	delete timetables
 delete_substitutions	untissync	en	delete substitution plan
 update_groupmembers	untissync	en	update class groups
-enabled	untissync	de	enabled
-enable	untissync	de	enable
-disabled	untissync	de	disabled
-disable	untissync	de	disable
-import_teacher_activation	untissync	de	Activate imported teachers if a user account could be assigned
-teacher_active_count	untissync	de	Activated teachers
-sync_participants	untissync	de	Load rooms and classes from Webuntis before importing
-last_sync	untissync	de	last sync
-teacher_all_count	untissync	de	imported teachers
+enabled	untissync	en	enabled
+enable	untissync	en	enable
+disabled	untissync	en	disabled
+disable	untissync	en	disable
+import_teacher_activation	untissync	en	Activate imported teachers if a user account could be assigned
+teacher_active_count	untissync	en	Activated teachers
+sync_participants	untissync	en	Load rooms and classes from Webuntis before importing
+last_sync	untissync	en	last sync
+teacher_all_count	untissync	en	imported teachers
+current_schoolyear	untissync	en	current school year
+schoolyear	untissync	en	school year
