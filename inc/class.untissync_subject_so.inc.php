@@ -36,8 +36,8 @@ class untissync_subject_so extends Api\Storage {
         $this->value_col[] = 'su_longname';
         $this->value_col[] = 'su_created';
         $this->value_col[] = 'su_modified';
-        
-        $this->customfields = Storage\Customfields::get($app, false, null, $db);
+
+        $this->customfields = Api\Storage\Customfields::get('untissync');
     }
     
     /**

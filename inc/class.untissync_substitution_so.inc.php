@@ -109,8 +109,8 @@ class untissync_substitution_so extends Api\Storage {
         $this->value_col['sub_room_org'] = 'sub_room_org';
         $this->value_col['sub_subject'] = 'sub_subject';
         $this->value_col['sub_subject_org'] = 'sub_subject_org';
-        
-        $this->customfields = Storage\Customfields::get($app, false, null, $db);
+
+        $this->customfields = Api\Storage\Customfields::get('untissync');
     }
     
     /**

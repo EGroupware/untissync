@@ -39,8 +39,8 @@ class untissync_teacher_so extends Api\Storage {
         $this->value_col['te_created'] = 'te_created';
         $this->value_col['te_modified'] = 'te_modified';
         $this->value_col['te_last_untis_sync'] = 'te_last_untis_sync';
-        
-        $this->customfields = Storage\Customfields::get($app, false, null, $db);
+
+        $this->customfields = Api\Storage\Customfields::get('untissync');
     }
 
     /**

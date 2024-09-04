@@ -35,8 +35,8 @@ class untissync_timegrid_so extends Api\Storage {
         $this->value_col['tg_name'] = 'tg_name';
         $this->value_col['tg_start'] = 'tg_start';
         $this->value_col['tg_end'] = 'tg_end';
-        
-        $this->customfields = Storage\Customfields::get($app, false, null, $db);
+
+        $this->customfields = Api\Storage\Customfields::get('untissync');
     }
 
     /**

@@ -46,8 +46,8 @@ class untissync_class_so extends Api\Storage {
         $this->value_col['egw_group_id'] = 'kl_egw_group_id';
         $this->value_col['created'] = 'kl_created';
         $this->value_col['modified'] = 'kl_modified';
-        
-        $this->customfields = Storage\Customfields::get($app, false, null, $db);
+
+        $this->customfields = Api\Storage\Customfields::get('untissync');
         
         $this->prefix_class_username = $config['webuntis_mapping_prefix_class'];        
         if(!isset($this->prefix_class_username)){

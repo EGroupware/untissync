@@ -59,7 +59,7 @@ class untissync_timetable_so extends Api\Storage {
         $this->check_modification_cols[] = 'tt_statsflags';
         $this->check_modification_cols[] = 'tt_activitytype';
         
-        //$this->customfields = Storage\Customfields::get($app, false, null, $db);
+        $this->customfields = Api\Storage\Customfields::get('untissync');
     }
     
     /**
