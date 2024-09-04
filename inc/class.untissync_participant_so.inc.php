@@ -40,8 +40,8 @@ class untissync_participant_so extends Api\Storage {
         $this->value_col['partorgname'] = 'pa_partorgname';      // original name
         $this->value_col['created'] = 'pa_created';          // created
         $this->value_col['modified'] = 'pa_modified';         // modified
-        
-        $this->customfields = Storage\Customfields::get($app, false, null, $db);
+
+        $this->customfields = Api\Storage\Customfields::get('untissync');
     }
     
     /**

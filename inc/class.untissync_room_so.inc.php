@@ -38,8 +38,8 @@ class untissync_room_so extends Api\Storage {
         $this->value_col['egw_res_id'] = 'ro_egw_res_id';
         $this->value_col['created'] = 'ro_created';
         $this->value_col['modified'] = 'ro_modified';
-        
-        $this->customfields = Storage\Customfields::get($app, false, null, $db);
+
+        $this->customfields = Api\Storage\Customfields::get('untissync');
     }
     
     /**
