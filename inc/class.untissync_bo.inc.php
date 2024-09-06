@@ -449,9 +449,10 @@ class untissync_bo {
      * @param $start
      * @param $end
      * @param $syName Name of school year
+     * @param $syId id of school year
      * @return bool|string
      */
-	private function getCurrentSchoolYear(&$start, &$end, &$syName){
+	private function getCurrentSchoolYear(&$start, &$end, &$syName, &$syId){
 	    $url = $this->getURL();
 	    
 	    $data = array(
@@ -487,6 +488,7 @@ class untissync_bo {
 	    $start = $jsonContent['result']['startDate'];
 	    $end = $jsonContent['result']['endDate'];
         $syName = $jsonContent['result']['name'];
+        $syId = $jsonContent['result']['id'];
 
 	    curl_close($ch);
 	    return true;
@@ -497,9 +499,10 @@ class untissync_bo {
      * @param $start
      * @param $end
      * @param $syName
+     * @param $syId
      * @return void
      */
-    private function getComingSchoolYear(&$start, &$end, &$syName){
+    private function getComingSchoolYear(&$start, &$end, &$syName, &$syId){
         $schoolYears = $this->getSchoolYears();
         $today = intval(date("Ymd"));
         $diffDays = 30000; // search only within the next 3 years
@@ -509,6 +512,7 @@ class untissync_bo {
                 $end = $val['endDate'];
                 $syName = $val['name'];
                 $diffDays = $val['startDate'] - $today;
+                $syId = $val['id'];
             }
         }
     }
@@ -563,10 +567,10 @@ class untissync_bo {
         $start = '';
 	    $end = '';
 	    
-	    $this->getCurrentSchoolYear($start, $end, $syName);
+	    $this->getCurrentSchoolYear($start, $end, $syName, $syId);
         // get coming school year if current school year is null
         if(empty($start)){
-            $this->getComingSchoolYear($start, $end, $syName);
+            $this->getComingSchoolYear($start, $end, $syName, $syId);
         }
 
 	    $startD = DateTime::createFromFormat('Ymd', $start);
@@ -1096,10 +1100,11 @@ class untissync_bo {
 	 */
 	private function importClasses()
 	{
-	    $options = array();
-	    $options['account_type'] = 'accounts';
-	    
-	    $config = untissync_config::read();
+        $this->getCurrentSchoolYear($start, $end, $syName, $syId);
+        // get coming school year if current school year is null
+        if(empty($start)){
+            $this->getComingSchoolYear($start, $end, $syName, $syId);
+        }
 
 	    $url = $this->getURL();
 	    
@@ -1108,6 +1113,7 @@ class untissync_bo {
 	        'method' => 'getKlassen',
 	        'jsonrpc' => '2.0',
 	        'params' => array(
+                'schoolyearId' => "$syId"
 	        ),
 	    );
 	    
@@ -1141,12 +1147,9 @@ class untissync_bo {
 	    foreach ($result['result'] as &$val) {
 	        $egw_uid = $this->so_class->getClassAccountID($val['name']);
 	        $egw_gid = $this->so_class->getClassTeacherGroupID($val['name']);
-
-	        $active = $egw_uid > 0 && $egw_gid < 0;	       
-
+	        $active = $egw_uid > 0 && $egw_gid < 0;
 	        $this->so_class->write($val['id'], $val['name'], $val['longName'], $egw_uid, $egw_gid, $active);
 	    }
-	    
 	    curl_close($ch);
 	    return $response;
 	}
@@ -1343,16 +1346,21 @@ class untissync_bo {
 	   // change Gi format to Hi (930 -> 0930)
 	    $starttime = str_pad($ttevent['tt_starttime'], 4, '0', STR_PAD_LEFT);
 	    $endtime = str_pad($ttevent['tt_endtime'], 4, '0', STR_PAD_LEFT);
-	    
-	    //$erste_stunde->format('Y-m-d') . ' ' . $content['stunde']['start'],
-	    $dateStart = DateTime::createFromFormat('Ymd Hi', $ttevent['tt_date'].' '.$starttime);
-	    $dateStart = new Api\DateTime($dateStart, Api\DateTime::$user_timezone);
-	    //$dateStart = 
-	    $dateEnd = DateTime::createFromFormat('Ymd Hi', $ttevent['tt_date'].' '.$endtime);
-	    $dateEnd = new Api\DateTime($dateEnd, Api\DateTime::$user_timezone);
+
+        if($config['webuntis_tz_id']){
+            $untisTZ = new DateTimeZone($config['webuntis_tz_id']);
+        }
+        else{
+            $untisTZ = new DateTimeZone("Europe/Berlin");
+        }
+
+	    $dateStart = DateTime::createFromFormat('Ymd Hi', $ttevent['tt_date'].' '.$starttime, $untisTZ);
+	    $dateStart = new Api\DateTime($dateStart, $untisTZ);
+
+	    $dateEnd = DateTime::createFromFormat('Ymd Hi', $ttevent['tt_date'].' '.$endtime, $untisTZ);
+	    $dateEnd = new Api\DateTime($dateEnd, $untisTZ);
 
 	    $category = isset($config['cal_category']) ? $config['cal_category'] : 0;
-
         $classes = implode(',', array_column($kl, 'kl_name'));
 
 	    $event = array(
@@ -1360,7 +1368,8 @@ class untissync_bo {
 	        'start' => $dateStart->format('ts'), //$dateStart->format('Y-m-d Hi'),
 	        'end' => $dateEnd->format('ts'), //$dateEnd->format('Y-m-d Hi'),
 	        'description' => $ttevent['tt_activitytype'].' ('.$classes.')',
-	        'location' => $this->arraytoCSV($ro, 'ro_name')
+	        'location' => $this->arraytoCSV($ro, 'ro_name'),
+            'tzid' => $untisTZ->getName(),
         );
 
 	    if($category > 0){
@@ -1398,9 +1407,6 @@ class untissync_bo {
             $calid = $this->bo_calendar_update->update($event, true, true, true, true, $msg, "NOPUSH"); // true for ignore_conflicts, update modifier, ignore acl
             $this->so_timetable->updateEgwCalendarEventID($ttevent, $calid); // update id an timestamp
         }
-
-
-	    
 	    return $calid;
 	}
 	
