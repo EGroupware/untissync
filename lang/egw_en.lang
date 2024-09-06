@@ -76,3 +76,4 @@ last_sync	untissync	en	last sync
 teacher_all_count	untissync	en	imported teachers
 current_schoolyear	untissync	en	current school year
 schoolyear	untissync	en	school year
+webuntis_tz_id	untissync	en	Timezone of WebUntis-Server

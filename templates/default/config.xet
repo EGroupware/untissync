@@ -32,6 +32,10 @@
 					<et2-description value="cal_event_owner"></et2-description>
 					<et2-select-account account_type="accounts" id="newsettings[webuntis_cal_event_owner]" multiple="false" class="et2_fullWidth"  width="30%" tags="true"></et2-select-account>
 				</row>
+				<row>
+				    <et2-description  value="webuntis_tz_id"></et2-description>
+                	<et2-select-timezone id="newsettings[webuntis_tz_id]" width="30%"></et2-select-timezone>
+                </row>
 				<!-- <row>
 					<description value="Zuordung der Räume zu Resourcen folgender Kategorie:"/>
 					<menulist>
