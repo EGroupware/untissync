@@ -9,6 +9,7 @@
  */
 
 import {EgwApp} from '../../api/js/jsapi/egw_app';
+import {Et2Dialog} from "../../api/js/etemplate/Et2Dialog/Et2Dialog";
 
 
 
@@ -78,10 +79,10 @@ class UntissyncApp extends EgwApp
 		}
 
 		let callbackDialog = function (btn){
-			if (btn === et2_dialog.YES_BUTTON)
+			if (btn === Et2Dialog.YES_BUTTON)
 			{
 				// long task dialog for de/activation accounts
-				et2_dialog.long_task(function(_val, _resp){
+				Et2Dialog.long_task(function(_val, _resp){
 					if (_val && _resp.type !== 'error')
 					{
 						console.log(_val,_resp);
@@ -90,8 +91,8 @@ class UntissyncApp extends EgwApp
 			}
 		};
 		// confirmation dialog
-		et2_dialog.show_dialog(callbackDialog, egw.lang('Are you sure you want to import %1 timetables?', activeCount), egw.lang('Import timetables?'), {},
-			et2_dialog.BUTTON_YES_NO, et2_dialog.WARNING_MESSAGE, undefined, egw);
+		Et2Dialog.show_dialog(callbackDialog, egw.lang('Are you sure you want to import %1 timetables?', activeCount), egw.lang('Import timetables?'), {},
+			Et2Dialog.BUTTONS_YES_NO, Et2Dialog.WARNING_MESSAGE, undefined, egw);
 	}
 
 	/**
@@ -140,10 +141,10 @@ class UntissyncApp extends EgwApp
 		}
 
 		let callbackDialog = function (btn){
-			if (btn === et2_dialog.YES_BUTTON)
+			if (btn === Et2Dialog.YES_BUTTON)
 			{
 				// long task dialog for de/activation accounts
-				et2_dialog.long_task(function(_val, _resp){
+				Et2Dialog.long_task(function(_val, _resp){
 					if (_val && _resp.type !== 'error')
 					{
 						console.log(_val,_resp);
@@ -156,8 +157,8 @@ class UntissyncApp extends EgwApp
 			}
 		};
 		// confirmation dialog
-		et2_dialog.show_dialog(callbackDialog, egw.lang('Are you sure you want to clear %1 timetables?', activeCount), egw.lang('Clear timetables?'), {},
-			et2_dialog.BUTTON_YES_NO, et2_dialog.WARNING_MESSAGE, undefined, egw);
+		Et2Dialog.show_dialog(callbackDialog, egw.lang('Are you sure you want to clear %1 timetables?', activeCount), egw.lang('Clear timetables?'), {},
+			Et2Dialog.BUTTONS_YES_NO, Et2Dialog.WARNING_MESSAGE, undefined, egw);
 	}
 
 	/**
