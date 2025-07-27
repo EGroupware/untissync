@@ -138,11 +138,15 @@ class untissync_bo {
 
 	    if($teacherUntisIDs == False){
 	        // update all timetables
+            $todayStart = new DateTime('today')->getTimestamp();
+
 	        $criteria = array(
-	            "te_egw_uid > 0 AND te_active = 1",
+	            "te_egw_uid > 0",
+                "te_active = 1",
+                "(te_last_untis_sync < {$todayStart} OR te_last_untis_sync IS NULL)"
 	        );
 	        $order = "te_last_untis_sync";
-	        $teachers = $this->so_teacher->search($criteria, False, $order); //$this->so_teacher->queryMapped();
+	        $teachers = $this->so_teacher->search($criteria, False, $order, '', '', false, 'AND', array(0, 50)); //$this->so_teacher->queryMapped();
 	        $teacherUntisIDs = array();
 	        foreach($teachers as $teacher){
 	            $teacherUntisIDs[$teacher['te_uid']] = array(

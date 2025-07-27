@@ -370,9 +370,9 @@ class untissync_ui
 		$job['id'] = self::ASYNC_JOB_UPD_TT_ID;
 		$job['method'] = $method;
 		$job['times'] = array(
-		    'dow' => "0-6",
-		    'hour' => (string)random_int(0, 4),
-		    'min' => (string)random_int(0, 59),
+            'dow' => "0-6",
+            'hour' => "*",
+		    'min' => "*/15",
 		);
 
 		if(!$async->write($job, true)){			
