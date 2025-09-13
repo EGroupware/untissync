@@ -56,7 +56,7 @@
 
 /* modal container contact ; #schulmanager-notenmanager-index_schulmanager-contact{*/
 /*#schulmanager-notenmanager-index_schulmanager-notenmanager-contact{*/
-#untissync-mapping_te_untissync-mapping_te_edit{
+#untissync-mapping_te_showtemapmodal_showtemapcontent_untissync-mapping_te_edit{
   position: absolute;
   border: 2px solid black;
   background-color: #ffffff;
@@ -66,7 +66,7 @@
   z-index: 99;
 }
 
-#untissync-mapping_kl_untissync-mapping_kl_edit{
+#untissync-mapping_kl_showklmapmodal_showklmapcontent_untissync-mapping_kl_edit{
   position: absolute;
   border: 2px solid black;
   background-color: #ffffff;
@@ -76,7 +76,7 @@
   z-index: 99;
 }
 
-#untissync-mapping_ro_untissync-mapping_ro_edit{
+#untissync-mapping_ro_showromapmodal_showromapcontent_untissync-mapping_ro_edit{
   position: absolute;
   border: 2px solid black;
   background-color: #ffffff;
