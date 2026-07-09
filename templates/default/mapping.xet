@@ -37,7 +37,7 @@
 					<et2-description id="${row}[name]" no_lang="1"></et2-description>
 					<et2-description id="${row}[forename]" no_lang="1"></et2-description>
 					<et2-checkbox id="${row}[active]" options="1,0" statustext="Mark teacher as active" onchange="app.untissync.changeTeacherMapping"></et2-checkbox>
-					<et2-select-account  id="{$row}[egw_uid]" no_lang="1" readonly="false" onchange="app.untissync.changeTeacherMapping"></et2-select-account>
+					<et2-select-account  id="${row}[egw_uid]" no_lang="1" readonly="false" onchange="app.untissync.changeTeacherMapping"></et2-select-account>
 				</row>				
 			</rows>
 		</grid>
@@ -62,7 +62,7 @@
 					<description id="${row}[longname]" no_lang="1"></description>
 					<description id="${row}[name]" no_lang="1"></description>
 					<menulist>
-						<menupopup type="select-account"  id="{$row}[egw_uid]" no_lang="1" readonly="false" onchange="app.untissync.changeRoomMapping"></menupopup>
+						<menupopup type="select-account"  id="${row}[egw_uid]" no_lang="1" readonly="false" onchange="app.untissync.changeRoomMapping"></menupopup>
 					</menulist>				
 				</row>				
 			</rows>
