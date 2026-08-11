@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2.0//EN" "https://www.egroupware.org/etemplate2.0.dtd">
 <overlay>
-	<template id="untissync.mapping_kl.table" template="" lang="" group="0" version="23.1">
+	<template id="untissync.mapping_kl.table" template="" lang="" group="0" version="26.1">
 		<grid id="nm_te">
 			<columns>
 				<column width="5%"></column>
@@ -32,9 +32,9 @@
 			</rows>
 		</grid>
 	</template>
-	<template id="untissync.mapping_kl.header_right" template="" lang="" group="0" version="23.1">
+	<template id="untissync.mapping_kl.header_right" template="" lang="" group="0" version="26.1">
 	</template>
-	<template id="untissync.mapping_kl" template="" lang="" group="0" version="23.1">
+	<template id="untissync.mapping_kl" template="" lang="" group="0" version="26.1">
 		<box id="showklmapmodal" class="modalbg" >
 			<et2-vbox id="showklmapcontent" width="70%">
 				<template id="untissync.mapping_kl_edit"></template>

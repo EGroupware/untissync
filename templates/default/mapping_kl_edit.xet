@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2.0//EN" "https://www.egroupware.org/etemplate2.0.dtd">
 <overlay>	
-	<template id="untissync.mapping_kl_edit" template="" lang="" group="0" version="23.1">
+	<template id="untissync.mapping_kl_edit" template="" lang="" group="0" version="26.1">
 		<et2-description label="link_untis_class"></et2-description>
 		<grid>
 			<columns>

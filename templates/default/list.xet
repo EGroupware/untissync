@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2.0//EN" "https://www.egroupware.org/etemplate2.0.dtd">
 <overlay>
-	<template id="untissync.list.rows" template="" lang="" group="0" version="23.1">
+	<template id="untissync.list.rows" template="" lang="" group="0" version="26.1">
 		<grid>
 			<columns>				
 				<column width="5%"></column>
@@ -52,7 +52,7 @@
 			</rows>
 		</grid>
 	</template>
-	<template id="untissync.list" template="" lang="" group="0" version="23.1">
+	<template id="untissync.list" template="" lang="" group="0" version="26.1">
 		<grid>
 			<columns>
 				<column width="90%"></column>

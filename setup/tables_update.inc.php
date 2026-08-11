@@ -99,6 +99,10 @@ function untissync_upgrade21_1_1()
 {
     return $GLOBALS['setup_info']['untissync']['currentver'] = '23.1';
 }
+function untissync_upgrade23_1()
+{
+    return $GLOBALS['setup_info']['untissync']['currentver'] = '26.1';
+}
 
 
 

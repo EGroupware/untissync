@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2.0//EN" "https://www.egroupware.org/etemplate2.0.dtd">
 <overlay>
-	<template id="untissync.mapping.teacher" template="" lang="" group="0" version="23.1">
+	<template id="untissync.mapping.teacher" template="" lang="" group="0" version="26.1">
 		<description value="Zuordnung Lehrer"></description>
 		<template id="nm_te_tmpl" no_lang="1" template="untissync.mapping.te_mapping" header_right="untissync.mapping.te_header_right"></template>
 	</template>
-	<template id="untissync.mapping.klassen" template="" lang="" group="0" version="23.1">
+	<template id="untissync.mapping.klassen" template="" lang="" group="0" version="26.1">
 		<description value="Zuordnung Klassen"></description>
 	</template>
-	<template id="untissync.mapping.rooms" template="" lang="" group="0" version="23.1">
+	<template id="untissync.mapping.rooms" template="" lang="" group="0" version="26.1">
 		<description value="Zuordnung Räume"></description>
 		<template id="nm_ro_tmpl" no_lang="1" template="untissync.mapping.ro_mapping" header_right="untissync.mapping.ro_header_right"></template>
 	</template>
-	<template id="untissync.mapping.te_mapping" template="" lang="" group="0" version="23.1">
+	<template id="untissync.mapping.te_mapping" template="" lang="" group="0" version="26.1">
 		<grid id="nm_te">
 			<columns>
 				<column width="5%"></column>
@@ -42,7 +42,7 @@
 			</rows>
 		</grid>
 	</template>
-	<template id="untissync.mapping.ro_mapping" template="" lang="" group="0" version="23.1">
+	<template id="untissync.mapping.ro_mapping" template="" lang="" group="0" version="26.1">
 		<grid id="nm_ro">
 			<columns>
 				<column width="5%"></column>
@@ -68,17 +68,17 @@
 			</rows>
 		</grid>
 	</template>
-	<template id="untissync.mapping.te_header_right" template="" lang="" group="0" version="23.1">
+	<template id="untissync.mapping.te_header_right" template="" lang="" group="0" version="26.1">
 		<button  statustext="Speichern" label="Speichern" id="button[te_save]" background_image="1"/>
 		<button  statustext="Update" label="Update" id="button[te_update]" background_image="1"/>
 		<button  statustext="Alle löschen" label="Leeren" id="button[te_truncate]" background_image="1"/>
 	</template>
-	<template id="untissync.mapping.ro_header_right" template="" lang="" group="0" version="0.0.001">
+	<template id="untissync.mapping.ro_header_right" template="" lang="" group="0" version="26.1">
 		<button  statustext="Speichern" label="Speichern" id="button[ro_save]" background_image="1"/>
 		<button  statustext="Update" label="Update" id="button[ro_update]" background_image="1"/>
 		<button  statustext="Alle löschen" label="Leeren" id="button[ro_truncate]" background_image="1"/>
 	</template>
-	<template id="untissync.mapping" template="" lang="" group="0" version="16.1">
+	<template id="untissync.mapping" template="" lang="" group="0" version="26.1">
 		<et2-description value="DEPRECATED mapping.xet"></et2-description>
 		<grid width="100%">
 			<columns>

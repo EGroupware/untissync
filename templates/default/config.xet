@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2.0//EN" "https://www.egroupware.org/etemplate2.0.dtd">
 <overlay>
-	<template id="untissync.config" template="" lang="" group="0" version="23.1">
+	<template id="untissync.config" template="" lang="" group="0" version="26.1">
 		<grid width="100%" class="admin-config egwGridView_grid">
 			<columns>
 				<column width="20%"></column>
@@ -10,7 +10,7 @@
 			<rows>
 				<row>
 					<et2-description value="Version"></et2-description>
-					<et2-description value="2025-09-10-2238"></et2-description>
+					<et2-description value="2026-08-11-1044"></et2-description>
 				</row>
 				<row>
 					<et2-description value="serverurl"></et2-description>

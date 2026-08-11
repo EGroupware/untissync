@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE overlay PUBLIC "-//EGroupware GmbH//eTemplate 2.0//EN" "https://www.egroupware.org/etemplate2.0.dtd">
 <overlay>
-	<template id="untissync.info" template="" lang="" group="0" version="23.1">
+	<template id="untissync.info" template="" lang="" group="0" version="26.1">
 		<grid width="100%" class="admin-config egwGridView_grid">
 			<columns>
 				<column width="20%"></column>

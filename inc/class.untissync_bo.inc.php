@@ -579,7 +579,6 @@ class untissync_bo {
 
 	    $startD = DateTime::createFromFormat('Ymd', $start);
 	    $endD = DateTime::createFromFormat('Ymd', $end);
-	    
 
         if($startDate < $startD){
 	        // $startDate before first day in school year
@@ -1367,12 +1366,12 @@ class untissync_bo {
 	    $category = isset($config['cal_category']) ? $config['cal_category'] : 0;
         $classes = implode(',', array_column($kl, 'kl_name'));
 
-	    $event = array(
-	        'title' => $this->createEventTitle($ttevent, $te, $ro, $kl, $su),
-	        'start' => $dateStart->format('ts'), //$dateStart->format('Y-m-d Hi'),
-	        'end' => $dateEnd->format('ts'), //$dateEnd->format('Y-m-d Hi'),
-	        'description' => $ttevent['tt_activitytype'].' ('.$classes.')',
-	        'location' => $this->arraytoCSV($ro, 'ro_name'),
+        $event = array(
+            'title' => $this->createEventTitle($ttevent, $te, $ro, $kl, $su),
+            'start' => $dateStart,
+            'end' => $dateEnd,
+            'description' => $ttevent['tt_activitytype'].' ('.$classes.')',
+            'location' => $this->arraytoCSV($ro, 'ro_name'),
             'tzid' => $untisTZ->getName(),
         );
 
