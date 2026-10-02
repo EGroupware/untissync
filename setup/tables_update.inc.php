@@ -104,5 +104,16 @@ function untissync_upgrade23_1()
     return $GLOBALS['setup_info']['untissync']['currentver'] = '26.1';
 }
 
+/**
+ * Add missing index on tt_uid, used to read/update a timetable entry by its Untis id
+ * (SELECT * FROM egw_untissync_timetable WHERE tt_uid=...), which otherwise does a full table scan
+ */
+function untissync_upgrade26_1()
+{
+    $GLOBALS['egw_setup']->oProc->CreateIndex('egw_untissync_timetable', array('tt_uid'), false);
+
+    return $GLOBALS['setup_info']['untissync']['currentver'] = '26.1.001';
+}
+
 
 

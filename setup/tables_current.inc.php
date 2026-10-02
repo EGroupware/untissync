@@ -144,7 +144,7 @@ $phpgw_baseline = array(
         ),
         'pk' => array('tt_id'),
         'fk' => array(),
-        'ix' => array('tt_egw_cal_id'),
+        'ix' => array('tt_egw_cal_id','tt_uid'),
         'uc' => array()
     ),
     'egw_untissync_timegrid' => array(
